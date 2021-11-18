@@ -8,14 +8,14 @@ import {
 } from "react-native"
 
 import ViewCourseInfo from "../components/ViewCourseInfo"
-import { CouseInformations, Review } from "../interfaces/courseInterface"
+import { CourseInformations, Review } from "../interfaces/courseInterface"
 
 type Page = "Information" | "Review"
 
 const CourseInfoPage: FC = () => {
   // states //
   const [page, setPage] = useState<Page>("Information")
-  const [courseInfo, setCourseInfo] = useState<CouseInformations>({
+  const [courseInfo, setCourseInfo] = useState<CourseInformations>({
     // courseImage?: string,
     courseName: "Caluluay เรียนแล้วรวย",
     subjectName: "Mathematics",
@@ -35,8 +35,12 @@ const CourseInfoPage: FC = () => {
   })
   const [reviewList, setReviewList] = useState<Review[]>([])
 
+  // fetch //
+  // const fetchData = () => {}
+
   const changePage = (page: Page) => {
-    console.log(`showing ${page}`)
+    // console.log(`showing ${page}`)
+    setPage(page)
   }
 
   return (
@@ -72,7 +76,13 @@ const CourseInfoPage: FC = () => {
           <Text>Review</Text>
         </TouchableOpacity>
       </View>
-      <ViewCourseInfo courseInfo={courseInfo} />
+      {page === "Information" ? (
+        <ViewCourseInfo courseInfo={courseInfo} />
+      ) : (
+        <>
+          <Text>@Pon put the review here</Text>
+        </>
+      )}
     </View>
   )
   // Showing course information page //

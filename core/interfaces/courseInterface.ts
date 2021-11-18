@@ -9,7 +9,7 @@ export interface Course {
   tutorName?: string
 }
 
-export interface CouseInformations {
+export interface CourseInformations {
   courseImage?: string
   courseName: string
   subjectName: string

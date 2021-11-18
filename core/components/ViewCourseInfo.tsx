@@ -1,9 +1,9 @@
 import React, { FC, useState } from "react"
 import { View, Text, ScrollView, Image } from "react-native"
 
-import { CouseInformations } from "../interfaces/courseInterface"
+import { CourseInformations } from "../interfaces/courseInterface"
 
-const ViewCourseInfo: FC<{ courseInfo: CouseInformations }> = ({
+const ViewCourseInfo: FC<{ courseInfo: CourseInformations }> = ({
   courseInfo,
 }) => {
   // const [courseInfo, setCourseInfo] = useState<CouseInformations>()
