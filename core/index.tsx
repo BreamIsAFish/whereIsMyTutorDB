@@ -2,6 +2,8 @@ import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 
 import BottomTabs from "../core/navigation/BottomTabs"
+import CourseInfoPage from "./studentPages/CourseInfoPage"
+import ManageCoursePage from "./tutorPages/ManageCoursePage"
 
 const Stack = createStackNavigator()
 
@@ -20,7 +22,7 @@ export const Index = () => {
   return (
     <Stack.Navigator
       initialRouteName={"Search"}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: true }}
     >
       <>
         <Stack.Screen
@@ -31,7 +33,14 @@ export const Index = () => {
           }}
         />
       </>
-      {/* <Stack.Screen name='ShopLocation' component={ShopLocation} /> */}
+      <Stack.Screen name="CourseInfo" component={CourseInfoPage} />
+      <Stack.Screen
+        name="Manage"
+        component={ManageCoursePage}
+        // options={{
+        //   headerShown: false,
+        // }}
+      />
     </Stack.Navigator>
   )
 }
