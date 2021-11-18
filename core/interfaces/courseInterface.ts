@@ -8,3 +8,12 @@ export interface Course {
   rating: number
   tutorName: string
 }
+
+export interface Member {
+  memberName: string
+}
+
+export interface Enrollment {
+  memberName: string
+  time: string
+}
