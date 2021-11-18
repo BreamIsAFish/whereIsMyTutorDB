@@ -10,6 +10,8 @@ import {
 import ViewCourseInfo from "../components/ViewCourseInfo"
 import { CourseInformations, Review } from "../interfaces/courseInterface"
 
+import ReviewCard from "../components/ReviewCard"
+
 type Page = "Information" | "Review"
 
 const CourseInfoPage: FC = () => {
@@ -33,7 +35,18 @@ const CourseInfoPage: FC = () => {
     description: "KUKUKUKUKUKUKUYYYYYYYYYY",
     amountOfWeek: 13,
   })
-  const [reviewList, setReviewList] = useState<Review[]>([])
+  const [reviewList, setReviewList] = useState<Review[]>([
+    {
+        reviwerName: "Veerin",
+        rating: 4.5,
+        comment: "good but not job",
+      }, // Just test example, can be delete
+      {
+        reviwerName: "Komsorn",
+        rating: 4,
+        comment: "not good but not job",
+      }, // Just test example, can be delete
+  ])
 
   // fetch //
   // const fetchData = () => {}
@@ -79,9 +92,15 @@ const CourseInfoPage: FC = () => {
       {page === "Information" ? (
         <ViewCourseInfo courseInfo={courseInfo} />
       ) : (
-        <>
-          <Text>@Pon put the review here</Text>
-        </>
+        <View style={styles.page}>
+            <ScrollView style={styles.scrollSection}>
+                {reviewList.map((review, idx) => (
+                <View key={idx} style={styles.card}>
+                    <ReviewCard review={review} />
+                </View>
+                ))}
+            </ScrollView>
+        </View>
       )}
     </View>
   )
@@ -100,6 +119,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: "3%",
     width: "80%",
+  },
+  page: {
+    paddingTop: "10%",
+    height: "100%",
+  },
+  scrollSection: {
+    marginTop: "5%",
+    paddingHorizontal: "5%",
+  },
+  card: {
+    marginBottom: "3%",
   },
 })
 
