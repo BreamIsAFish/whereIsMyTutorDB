@@ -1,3 +1,4 @@
+<<<<<<< refs/remotes/origin/main
 import React, { FC, useState } from "react"
 import {
   View,
@@ -100,6 +101,69 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: "3%",
     width: "80%",
+=======
+import React, { useState } from "react"
+import { View, Text, ScrollView, StyleSheet } from "react-native"
+
+import ReviewCard from "../components/ReviewCard"
+import { Review } from "../interfaces/courseInterface"
+
+const CourseInfoPage = () => {
+  // const [courseName, setCourseName] = useState()
+  // const [subjectName, setSubjectName] = useState('Mathematics')
+  // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
+  // const [courseDay, setCourseDay] = useState(['Monday', 'Wednesday'])
+  // const [capacity, setCapacity] = useState(0)
+  // const [maxCapacity, setMaxCapacity] = useState(0)
+  // const [rating, setRating] = useState(0)
+  // const [tutorName, setTutorName] = useState('Dr. Kommuay')
+  const [reviewList, setReviewList] = useState<Review[]>([
+    {
+        studentName: "Veerin",
+        rating: 4.5,
+        description: "good but not job",
+    }, // Just test example, can be delete
+    {
+        studentName: "Komsorn",
+        rating: 4.0,
+        description: "no good but not job",
+    }, // Just test example, can be delete
+    {
+        studentName: "Ruttasate",
+        rating: 4.7,
+        description: "hey that's pretty good",
+    }, // Just test example, can be delete
+  ])
+
+  return (
+    <View style={styles.page}>
+      <Text style={{ textAlign: "center" }}>
+        {"======== Course info ======="}
+      </Text>
+      {/* </View> */}
+      <ScrollView style={styles.scrollSection}>
+        {reviewList.map((review, idx) => (
+          <View key={idx} style={styles.card}>
+            <ReviewCard review={review} />
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  page: {
+    paddingTop: "10%",
+    height: "100%",
+  },
+  scrollSection: {
+    marginTop: "5%",
+    paddingHorizontal: "5%",
+  },
+  card: {
+    marginBottom: "3%",
+>>>>>>> Auto stash before rebase of "origin/main"
   },
 })
 

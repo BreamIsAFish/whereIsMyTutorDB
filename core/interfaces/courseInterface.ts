@@ -35,6 +35,7 @@ export interface Review {
   comment: string
 }
 
+<<<<<<< Updated upstream
 export interface Member {
   memberName: string
 }
@@ -42,4 +43,10 @@ export interface Member {
 export interface Enrollment {
   memberName: string
   time: string
+=======
+export interface Review {
+  studentName: string
+  rating: number
+  description: string
+>>>>>>> Stashed changes
 }
