@@ -30,24 +30,11 @@ const ReviewCard: FC<{ review: Review }> = ({ review }) => {
             }}
           />
           <View style={{ marginVertical: "2%" }}>
-            <Text>{review.studentName}</Text>
-            <Text>{review.rating}</Text>
-            <Text>{review.description}</Text>
-            {/* <View style={{ flexDirection: "row" }}>
-              {course.lessonList.map((lesson, idx) => (
-                <Text key={idx}>{lesson}</Text>
-              ))}
-            </View> */}
-            {/* <View style={{ flexDirection: "row" }}>
-              {course.courseDay.map((day, idx) => (
-                <Text key={idx}>{day}</Text>
-              ))}
-            </View>
             <View style={{ flexDirection: "row" }}>
-              <Text>{"Rating: " + course.rating}</Text>
-              <Text>{`Capacity: ${course.capacity}/${course.maxCapacity}`}</Text>
-              <Text>{course.tutorName}</Text> */}
-            {/* </View> */}
+                <Text>{review.reviwerName}</Text>
+                <Text>{review.rating}</Text>
+            </View>
+            <Text>{review.comment}</Text>
           </View>
         </View>
       </TouchableOpacity>
