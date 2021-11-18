@@ -3,7 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native"
 
 import { Course } from "../interfaces/courseInterface"
 
-const CourseCard: FC<{ course: Course }> = ({ course }) => {
+interface CourseCardProp {
+  course: Course
+  onClick?: () => void // "?" mean that onClick can be undefined (other page doesn't "need" sent onClick to this component)
+}
+
+const CourseCard: FC<CourseCardProp> = ({ course, onClick }) => {
   // const [courseName, setCourseName] = useState('Calculuay เรียนแล้วรวย')
   // const [subjectName, setSubjectName] = useState('Mathematics')
   // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
@@ -13,12 +18,12 @@ const CourseCard: FC<{ course: Course }> = ({ course }) => {
   // const [rating, setRating] = useState(0)
   // const [tutorName, setTutorName] = useState('Dr. Kommuay')
 
-  const onClick = () => {
+  const defaultClick = () => {
     console.log("Kuy Pond")
   }
 
   return (
-    <TouchableOpacity onPress={onClick}>
+    <TouchableOpacity onPress={onClick ? () => onClick() : defaultClick}>
       <View style={styles.card}>
         <Image
           source={require("../../assets/CourseImage.png")}
@@ -30,7 +35,9 @@ const CourseCard: FC<{ course: Course }> = ({ course }) => {
           }}
         />
         <View style={{ marginVertical: "2%" }}>
-          <Text>{course.courseName}</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+            {course.courseName}
+          </Text>
           <Text>{course.subjectName}</Text>
           <View style={{ flexDirection: "row" }}>
             {course.lessonList.map((lesson, idx) => (
@@ -43,8 +50,12 @@ const CourseCard: FC<{ course: Course }> = ({ course }) => {
             ))}
           </View>
           <View style={{ flexDirection: "row" }}>
-            <Text>{"Rating: " + course.rating}</Text>
-            <Text>{`Capacity: ${course.capacity}/${course.maxCapacity}`}</Text>
+            <Text>{course.rating ? "Rating: " + course.rating : ""}</Text>
+            <Text>
+              {course.capacity
+                ? `Capacity: ${course.capacity}/${course.maxCapacity}`
+                : ""}
+            </Text>
             <Text>{course.tutorName}</Text>
           </View>
         </View>
