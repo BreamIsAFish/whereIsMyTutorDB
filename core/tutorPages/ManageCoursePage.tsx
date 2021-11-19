@@ -31,15 +31,10 @@ const ManageCoursePage: FC = () => {
 
   // other functions //
   const redirectEditCourse = () => {
-    console.log("navigating to edit course page...")
-    // navigation.navigate('EditCourse');
-    // navigation.push("CourseInfo")
+    // console.log("navigating to edit course page...")
     navigation.dispatch(
       CommonActions.navigate({
-        name: "CourseInfo",
-        // params: {
-        //   \course
-        // },
+        name: "EditCourseInfo",
       })
     )
   }

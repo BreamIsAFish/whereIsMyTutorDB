@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 import BottomTabs from "../core/navigation/BottomTabs"
 import CourseInfoPage from "./studentPages/CourseInfoPage"
 import ManageCoursePage from "./tutorPages/ManageCoursePage"
+import EditCoursePage from "./tutorPages/EditCoursePage"
 
 const Stack = createStackNavigator()
 
@@ -33,14 +34,9 @@ export const Index = () => {
           }}
         />
       </>
-      <Stack.Screen name="CourseInfo" component={CourseInfoPage} />
-      <Stack.Screen
-        name="Manage"
-        component={ManageCoursePage}
-        // options={{
-        //   headerShown: false,
-        // }}
-      />
+      <Stack.Screen name="ViewCourseInfo" component={CourseInfoPage} />
+      <Stack.Screen name="EditCourseInfo" component={EditCoursePage} />
+      <Stack.Screen name="Manage" component={ManageCoursePage} />
     </Stack.Navigator>
   )
 }
