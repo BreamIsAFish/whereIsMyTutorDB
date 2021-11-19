@@ -5,6 +5,8 @@ import { RadioButton, Divider, List } from 'react-native-paper';
 import CourseCard from "../components/CourseCard"
 import { Course } from "../interfaces/courseInterface"
 
+type PriceRate = "All"|"0 - 500 Bath"|"500 - 1000 Bath"|"1000 - 2000 Bath"|"2000 - 3000 Bath"|"3000++ Bath"
+
 const SearchCoursePage = () => {
   // const [courseName, setCourseName] = useState()
   // const [subjectName, setSubjectName] = useState('Mathematics')
@@ -36,6 +38,10 @@ const SearchCoursePage = () => {
       tutorName: "Dr. Kommuay",
     }, // Just test example, can be delete
   ])
+
+
+
+
   const [subjectList, setSubjectList] = useState<string[]>([
     "All",
     "Mathematic",
@@ -46,13 +52,13 @@ const SearchCoursePage = () => {
     "Chemistry",
     "Physic",
   ])
-  const [text, onChangeText] = React.useState("");
-  const [filterVisible, setFilterVisible] = useState(false);
-  const [priceRate, setPriceRate] = React.useState("All");
-  const [courseDay, setCourseDay] = React.useState("Mixed");
-  const [subject, setSubject] = React.useState("All");
-  const [sortType, setSortType] = React.useState("price");
-  const [ascending, setAscending] = React.useState(true);
+  const [searchText, setSearchText] = useState<string>("");
+  const [filterVisible, setFilterVisible] = useState<boolean>(false);
+  const [priceRate, setPriceRate] = useState<PriceRate>("All");
+  const [courseDay, setCourseDay] = useState<"Mixed"|"Weekend"|"Weekday">("Mixed");
+  const [subjectName, setSubjectName] = useState<string>("");
+  const [sortType, setSortType] = useState<"Price"|"Date">("Price");
+  const [ascending, setAscending] = useState<boolean>(true);
 
   return (
     <View style={styles.page}>
@@ -63,8 +69,8 @@ const SearchCoursePage = () => {
         <View style={{ flexDirection: "row" , height: 40}}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={setSearchText}
+            value={searchText}
             placeholder="Search bar"
 
           />
@@ -85,16 +91,16 @@ const SearchCoursePage = () => {
           <View style={{ flexDirection: "row", alignItems: "center",}}>
             <RadioButton
               value="Sort by Price"
-              status={ sortType === 'price' ? 'checked' : 'unchecked' }
-              onPress={() => setSortType('price')}
+              status={ sortType === 'Price' ? 'checked' : 'unchecked' }
+              onPress={() => setSortType('Price')}
             />
             <Text>Sort by Price</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", marginLeft: "2%"}}>
             <RadioButton
               value="Sort by Date"
-              status={ sortType === 'date' ? 'checked' : 'unchecked' }
-              onPress={() => setSortType('date')}
+              status={ sortType === 'Date' ? 'checked' : 'unchecked' }
+              onPress={() => setSortType('Date')}
             />
             <Text>Sort by Date</Text>
           </View>
@@ -128,7 +134,7 @@ const SearchCoursePage = () => {
             <View style={{width: 280, backgroundColor:"white"}}>
               <Divider />
               <Text>Subject:</Text>
-              <List.Accordion
+              {/* <List.Accordion
                 title={subject}
                 style={{ padding: 0}}>
                 {subjectList.map((subjectName, idx) => (
@@ -137,7 +143,13 @@ const SearchCoursePage = () => {
                     onPress={() => setSubject(subjectName)}
                   />
                 ))}
-              </List.Accordion>
+              </List.Accordion> */}
+              <TextInput
+                style={styles.input}
+                onChangeText={setSubjectName}
+                value={subjectName}
+                placeholder="Key Your subject name?"
+              />
               <Divider />
               <Text>Price Rate:</Text>
 
@@ -230,7 +242,7 @@ const SearchCoursePage = () => {
             <View style={{ flexDirection: "row", alignItems: "center", marginTop: "5%"}}>
               <Pressable
                 style={[styles.button, styles.buttonClearFilter]}
-                onPress={() => {setCourseDay('Mixed'), setPriceRate('All'), setSubject('All')}}
+                onPress={() => {setCourseDay('Mixed'), setPriceRate('All'), setSubjectName('')}}
               >
                 <Text style={styles.textStyle}>Clear</Text>
               </Pressable>
