@@ -1,20 +1,36 @@
 import React, { useState } from "react"
-import { View, Text, ScrollView, StyleSheet, Button, TouchableOpacity } from "react-native"
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+} from "react-native"
 
 import MemberCard from "../components/MemberCard"
-
-import { Member, Enrollment } from "../interfaces/courseInterface"
 import EnrollmentCard from "../components/ErollmentCard"
+import EditCourseInfo from "../components/EditCourseInfo"
+import {
+  Member,
+  Enrollment,
+  CourseInformations,
+} from "../interfaces/courseInterface"
 
 const EditCoursePage = () => {
-  // const [courseName, setCourseName] = useState()
-  // const [subjectName, setSubjectName] = useState('Mathematics')
-  // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
-  // const [courseDay, setCourseDay] = useState(['Monday', 'Wednesday'])
-  // const [capacity, setCapacity] = useState(0)
-  // const [maxCapacity, setMaxCapacity] = useState(0)
-  // const [rating, setRating] = useState(0)
-  // const [tutorName, setTutorName] = useState('Dr. Kommuay')
+  // states //
+  const [courseInfo, setCourseInfo] = useState<CourseInformations>({
+    courseImage: undefined,
+    courseName: "",
+    subjectName: "",
+    lessonList: [],
+    timeslots: {},
+    price: 0,
+    capacity: 0,
+    learningType: "Mixed",
+    description: "",
+    amountOfWeek: 0,
+  })
   const [memberList, setMemberList] = useState<Member[]>([
     {
       memberName: "Dr. Kommuay",
@@ -32,32 +48,32 @@ const EditCoursePage = () => {
       memberName: "Dr. Veeruay3",
     }, // Just test example, can be delete
   ])
-
   const [enrollmentList, setEnrollmentList] = useState<Enrollment[]>([
     {
       memberName: "Dr. Kommuay",
-      time: "03/11/2021   06:37"
+      time: "03/11/2021   06:37",
     }, // Just test example, can be delete
     {
       memberName: "Dr. Veeruay0",
-      time: "03/11/2021   06:38"
+      time: "03/11/2021   06:38",
     }, // Just test example, can be delete
     {
       memberName: "Dr. Veeruay1",
-      time: "03/11/2021   06:39"
+      time: "03/11/2021   06:39",
     }, // Just test example, can be delete
     {
       memberName: "Dr. Veeruay2",
-      time: "03/11/2021   06:40"
+      time: "03/11/2021   06:40",
     }, // Just test example, can be delete
     {
       memberName: "Dr. Veeruay3",
-      time: "03/11/2021   06:41"
+      time: "03/11/2021   06:41",
     }, // Just test example, can be delete
   ])
 
-  const [pageState, setPageState] = useState<string>("EnrollmentSection")
-
+  const [pageState, setPageState] = useState<
+    "EnrollmentSection" | "MemberSection" | "ImformationSection"
+  >("ImformationSection")
 
   return (
     <View style={styles.page}>
@@ -65,48 +81,69 @@ const EditCoursePage = () => {
         {"======== Info / Member / Enrollment ======="}
       </Text> */}
       <View style={styles.ChooseSection}>
-        <TouchableOpacity style={{
+        <TouchableOpacity
+          style={{
             backgroundColor: "#E9E8FC",
-            }}
-            onPress={() => setPageState("ImformationSection")}>
-            <Text style={{ color: "black", margin: "3%", paddingHorizontal: "2%",}}>Imformation</Text>
+          }}
+          onPress={() => setPageState("ImformationSection")}
+        >
+          <Text
+            style={{ color: "black", margin: "3%", paddingHorizontal: "2%" }}
+          >
+            Imformation
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{
+        <TouchableOpacity
+          style={{
             backgroundColor: "#E9E8FC",
-            }}
-            onPress={() => setPageState("MemberSection")}>
-            <Text style={{ color: "black", margin: "3%" ,paddingHorizontal: "2%",}}>Member</Text>
+          }}
+          onPress={() => setPageState("MemberSection")}
+        >
+          <Text
+            style={{ color: "black", margin: "3%", paddingHorizontal: "2%" }}
+          >
+            Member
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{
+        <TouchableOpacity
+          style={{
             backgroundColor: "#E9E8FC",
-            }}
-            onPress={() => setPageState("EnrollmentSection")}>
-            <Text style={{ color: "black", margin: "3%" ,paddingHorizontal: "2%",}}>Enrollment</Text>
+          }}
+          onPress={() => setPageState("EnrollmentSection")}
+        >
+          <Text
+            style={{ color: "black", margin: "3%", paddingHorizontal: "2%" }}
+          >
+            Enrollment
+          </Text>
         </TouchableOpacity>
       </View>
 
-      {(pageState == "MemberSection") ?
-      <ScrollView style={styles.scrollSection}>
-      {memberList.map((member, idx) => (
-        <View key={idx} style={styles.card}>
-          <MemberCard member={member} />
-        </View>
-      ))}
-      </ScrollView>
-      :null}
+      {pageState == "ImformationSection" ? (
+        <EditCourseInfo courseInfo={courseInfo} setCourseInfo={setCourseInfo} />
+      ) : null}
 
-      {(pageState == "EnrollmentSection") ?
-      <ScrollView style={styles.scrollSection}>
-      {enrollmentList.map((enrollment, idx) => (
-        <View key={idx} style={styles.card}>
-          <EnrollmentCard enrollment={enrollment} />
-        </View>
-      ))}
-      </ScrollView>
-      :null}
+      {pageState == "MemberSection" ? (
+        <ScrollView style={styles.scrollSection}>
+          {memberList.map((member, idx) => (
+            <View key={idx} style={styles.card}>
+              <MemberCard member={member} />
+            </View>
+          ))}
+        </ScrollView>
+      ) : null}
 
+      {pageState == "EnrollmentSection" ? (
+        <ScrollView style={styles.scrollSection}>
+          {enrollmentList.map((enrollment, idx) => (
+            <View key={idx} style={styles.card}>
+              <EnrollmentCard enrollment={enrollment} />
+            </View>
+          ))}
+        </ScrollView>
+      ) : null}
     </View>
   )
 }

@@ -1,11 +1,27 @@
 import React, { useState } from "react"
-import { View, Text, ScrollView, StyleSheet, TextInput, Modal, Alert, Pressable, } from "react-native"
-import { RadioButton, Divider, List } from 'react-native-paper';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  Modal,
+  Alert,
+  Pressable,
+} from "react-native"
+import { useNavigation, CommonActions } from "@react-navigation/native"
+import { RadioButton, Divider, List } from "react-native-paper"
 
 import CourseCard from "../components/CourseCard"
 import { Course } from "../interfaces/courseInterface"
 
-type PriceRate = "All"|"0 - 500 Bath"|"500 - 1000 Bath"|"1000 - 2000 Bath"|"2000 - 3000 Bath"|"3000++ Bath"
+type PriceRate =
+  | "All"
+  | "0 - 500 Bath"
+  | "500 - 1000 Bath"
+  | "1000 - 2000 Bath"
+  | "2000 - 3000 Bath"
+  | "3000++ Bath"
 
 const SearchCoursePage = () => {
   // const [courseName, setCourseName] = useState()
@@ -60,19 +76,30 @@ const SearchCoursePage = () => {
   const [sortType, setSortType] = useState<"Price"|"Date">("Price");
   const [isAscending, setIsAscending] = useState<boolean>(true);
 
+  const navigation = useNavigation()
+
+  // other functions //
+  const redirectCourseInfo = () => {
+    console.log("navigating to edit course page...")
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: "ViewCourseInfo",
+      })
+    )
+  }
+
   return (
     <View style={styles.page}>
       {/* <Text style={{ textAlign: "center" }}>
         {"======== Search bar ======="}
       </Text> */}
-      <View style={{ flexDirection: "column" , marginHorizontal: 20}}>
-        <View style={{ flexDirection: "row" , height: 40}}>
+      <View style={{ flexDirection: "column", marginHorizontal: 20 }}>
+        <View style={{ flexDirection: "row", height: 40 }}>
           <TextInput
             style={styles.input}
             onChangeText={setSearch}
             value={search}
             placeholder="Search bar"
-
           />
           <Pressable
             style={[styles.button, styles.buttonOpen]}
@@ -81,60 +108,65 @@ const SearchCoursePage = () => {
             <Text style={styles.textStyle}>Add filter</Text>
           </Pressable>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center",}}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Pressable
             style={{ backgroundColor: "gray", width: 50}}
             onPress={() => setIsAscending(!isAscending)}
           >
             <Text style={styles.textStyle}>{(isAscending) ? "Asc": "Des"}</Text>
           </Pressable>
-          <View style={{ flexDirection: "row", alignItems: "center",}}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <RadioButton
               value="Sort by Price"
-              status={ sortType === 'Price' ? 'checked' : 'unchecked' }
-              onPress={() => setSortType('Price')}
+              status={sortType === "Price" ? "checked" : "unchecked"}
+              onPress={() => setSortType("Price")}
             />
             <Text>Sort by Price</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center", marginLeft: "2%"}}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: "2%",
+            }}
+          >
             <RadioButton
               value="Sort by Date"
-              status={ sortType === 'Date' ? 'checked' : 'unchecked' }
-              onPress={() => setSortType('Date')}
+              status={sortType === "Date" ? "checked" : "unchecked"}
+              onPress={() => setSortType("Date")}
             />
             <Text>Sort by Date</Text>
           </View>
         </View>
       </View>
 
-
       {/* </View> */}
       <ScrollView style={styles.scrollSection}>
         {courseList.map((course, idx) => (
           <View key={idx} style={styles.card}>
-            <CourseCard course={course} />
+            <CourseCard course={course} onClick={redirectCourseInfo} />
           </View>
         ))}
       </ScrollView>
-      
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={filterVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setFilterVisible(!filterVisible);
+          Alert.alert("Modal has been closed.")
+          setFilterVisible(!filterVisible)
         }}
       >
         <ScrollView>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Filter</Text>
-            <Divider />
-            <View style={{width: 280, backgroundColor:"white"}}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Filter</Text>
               <Divider />
-              <Text>Subject:</Text>
-              {/* <List.Accordion
+              <View style={{ width: 280, backgroundColor: "white" }}>
+                <Divider />
+                <Text>Subject:</Text>
+                {/* <List.Accordion
                 title={subject}
                 style={{ padding: 0}}>
                 {subjectList.map((subjectName, idx) => (
@@ -232,33 +264,54 @@ const SearchCoursePage = () => {
                 </View>
               </View>
 
-              <Text>Course Day:</Text>
+                <Text>Course Day:</Text>
 
-              <View style={{ flexDirection: "row",}}>
-                <View style={{ flexDirection: "row", alignItems: "center", width: 90}}>
-                  <RadioButton
-                    value="value"
-                    status={ courseDay === 'Weekend' ? 'checked' : 'unchecked' }
-                    onPress={() => setCourseDay('Weekend')}
-                  />
-                  <Text>Weekend</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: 90,
+                    }}
+                  >
+                    <RadioButton
+                      value="value"
+                      status={courseDay === "Weekend" ? "checked" : "unchecked"}
+                      onPress={() => setCourseDay("Weekend")}
+                    />
+                    <Text>Weekend</Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: 90,
+                      marginLeft: "2%",
+                    }}
+                  >
+                    <RadioButton
+                      value="value"
+                      status={courseDay === "Weekday" ? "checked" : "unchecked"}
+                      onPress={() => setCourseDay("Weekday")}
+                    />
+                    <Text>Weekday</Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginLeft: "2%",
+                    }}
+                  >
+                    <RadioButton
+                      value="value"
+                      status={courseDay === "Mixed" ? "checked" : "unchecked"}
+                      onPress={() => setCourseDay("Mixed")}
+                    />
+                    <Text>Mixed</Text>
+                  </View>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center", width: 90, marginLeft: "2%"}}>
-                  <RadioButton
-                    value="value"
-                    status={ courseDay === 'Weekday' ? 'checked' : 'unchecked' }
-                    onPress={() => setCourseDay('Weekday')}
-                  />
-                  <Text>Weekday</Text>
-                </View>
-                <View style={{ flexDirection: "row", alignItems: "center", marginLeft: "2%"}}>
-                  <RadioButton
-                    value="value"
-                    status={ courseDay === 'Mixed' ? 'checked' : 'unchecked' }
-                    onPress={() => setCourseDay('Mixed')}
-                  />
-                  <Text>Mixed</Text>
-                </View>
+                <Divider />
               </View>
 
               <Text>Learning Type:</Text>
@@ -304,25 +357,30 @@ const SearchCoursePage = () => {
                   setLearningType('Mixed'),
                   console.log("set min:",{min},", max:",{max})}}
               >
-                <Text style={styles.textStyle}>Clear</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, styles.buttonApplyFilter]}
-                onPress={() => setFilterVisible(!filterVisible)}
-              >
-                <Text style={styles.textStyle}>Apply Filter</Text>
-              </Pressable>
+                <Pressable
+                  style={[styles.button, styles.buttonClearFilter]}
+                  onPress={() => {
+                    setCourseDay("Mixed"),
+                      setPriceRate("All"),
+                      setSubjectName("")
+                  }}
+                >
+                  <Text style={styles.textStyle}>Clear</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.button, styles.buttonApplyFilter]}
+                  onPress={() => setFilterVisible(!filterVisible)}
+                >
+                  <Text style={styles.textStyle}>Apply Filter</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
-        </View>
         </ScrollView>
       </Modal>
-      
     </View>
   )
 }
-
-
 
 const styles = StyleSheet.create({
   page: {
@@ -346,7 +404,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -357,11 +415,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
@@ -386,12 +444,12 @@ const styles = StyleSheet.create({
   textStyle: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 })
 
 export default SearchCoursePage
