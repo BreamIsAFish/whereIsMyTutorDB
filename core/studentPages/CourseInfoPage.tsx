@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native"
+import { Button } from "react-native-paper"
 
 import ViewCourseInfo from "../components/ViewCourseInfo"
 import { CourseInformations, Review } from "../interfaces/courseInterface"
@@ -56,6 +57,10 @@ const CourseInfoPage: FC = () => {
     setPage(page)
   }
 
+  const sendRegister = () => {
+    console.log("Sending register...")
+  }
+
   return (
     <View style={{ paddingVertical: "3%", alignItems: "center" }}>
       <View style={styles.button}>
@@ -90,10 +95,26 @@ const CourseInfoPage: FC = () => {
         </TouchableOpacity>
       </View>
       {page === "Information" ? (
-        <ViewCourseInfo courseInfo={courseInfo} />
-      ) : (
         <View style={styles.page}>
-          <ScrollView style={styles.scrollSection}>
+          <ScrollView contentContainerStyle={styles.scrollSection}>
+            <View style={{ marginBottom: "10%" }}>
+              <ViewCourseInfo courseInfo={courseInfo} />
+            </View>
+            <View>
+              <Button
+                mode="contained"
+                color="dodgerblue"
+                onPress={sendRegister}
+              >
+                Register Coruse
+              </Button>
+            </View>
+          </ScrollView>
+        </View>
+      ) : (
+        // </View>
+        <View style={styles.page}>
+          <ScrollView contentContainerStyle={styles.scrollSection}>
             {reviewList.map((review, idx) => (
               <View key={idx} style={styles.card}>
                 <ReviewCard review={review} />
@@ -121,7 +142,7 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   page: {
-    paddingTop: "10%",
+    // paddingTop: "10%",
     height: "100%",
   },
   scrollSection: {

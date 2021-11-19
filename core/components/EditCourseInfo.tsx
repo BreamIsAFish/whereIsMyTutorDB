@@ -199,8 +199,8 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
 
   return (
     <Provider>
-      <ScrollView
-        contentContainerStyle={{
+      <View
+        style={{
           paddingHorizontal: "5%",
           marginBottom: "5%",
         }}
@@ -325,11 +325,11 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
               }}
             >
               <RadioButton value="Online" />
-              <Text>First</Text>
+              <Text>Online</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <RadioButton value="Offline" />
-              <Text>Second</Text>
+              <Text>Offline</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <RadioButton value="Mixed" />
@@ -386,7 +386,7 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
           Delete Course
         </Button> */}
         {/* </View> */}
-      </ScrollView>
+      </View>
     </Provider>
   )
 }

@@ -19,13 +19,15 @@ const ViewCourseInfo: FC<{ courseInfo: CourseInformations }> = ({
   )
 
   return (
-    <ScrollView contentContainerStyle={{ width: "100%", height: "100%" }}>
-      {courseInfo.courseImage ? (
-        <Image source={{}} />
-      ) : (
-        <Image source={require("../../assets/CourseImage.png")} />
-      )}
-      <View style={{ width: "100%" }}>
+    <View>
+      <View style={{ marginBottom: "5%" }}>
+        {courseInfo.courseImage ? (
+          <Image source={{}} />
+        ) : (
+          <Image source={require("../../assets/CourseImage.png")} />
+        )}
+      </View>
+      <View>
         <Text>{`Course Name : ${courseInfo.courseName}`}</Text>
         <Text>{`Subject : ${courseInfo.subjectName}`}</Text>
         <View style={{ flexDirection: "row" }}>
@@ -45,7 +47,7 @@ const ViewCourseInfo: FC<{ courseInfo: CourseInformations }> = ({
         <Text>{courseInfo.description}</Text>
         <Text>{`Course Hour : ${courseInfo.courseHour}`}</Text>
       </View>
-    </ScrollView>
+    </View>
   )
 }
 

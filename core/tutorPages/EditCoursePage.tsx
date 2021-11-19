@@ -143,7 +143,7 @@ const EditCoursePage = () => {
       </View>
 
       {pageState == "ImformationSection" ? (
-        <View>
+        <ScrollView>
           <EditCourseInfo
             courseInfo={courseInfo}
             setCourseInfo={setCourseInfo}
@@ -151,26 +151,28 @@ const EditCoursePage = () => {
             // goBack={goBack}
             // deleteCourse={deleleCourse}
           />
-          <Button
-            mode="contained"
-            color="dodgerblue"
-            onPress={sendData}
-            style={{ marginBottom: "3%" }}
-          >
-            Save Changes
-          </Button>
-          <Button
-            mode="contained"
-            color="gold"
-            onPress={goBack}
-            style={{ marginBottom: "8%" }}
-          >
-            Cancel
-          </Button>
-          <Button mode="contained" color="tomato" onPress={deleteCourse}>
-            Delete Course
-          </Button>
-        </View>
+          <View style={{ paddingHorizontal: "5%" }}>
+            <Button
+              mode="contained"
+              color="dodgerblue"
+              onPress={sendData}
+              style={{ marginBottom: "3%" }}
+            >
+              Save Changes
+            </Button>
+            <Button
+              mode="contained"
+              color="gold"
+              onPress={goBack}
+              style={{ marginBottom: "8%" }}
+            >
+              Cancel
+            </Button>
+            <Button mode="contained" color="tomato" onPress={deleteCourse}>
+              Delete Course
+            </Button>
+          </View>
+        </ScrollView>
       ) : null}
 
       {pageState == "MemberSection" ? (
