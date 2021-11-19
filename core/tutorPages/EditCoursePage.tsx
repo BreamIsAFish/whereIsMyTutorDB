@@ -4,9 +4,10 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  Button,
   TouchableOpacity,
 } from "react-native"
+import { useNavigation } from "@react-navigation/native"
+import { Button } from "react-native-paper"
 
 import MemberCard from "../components/MemberCard"
 import EnrollmentCard from "../components/ErollmentCard"
@@ -75,17 +76,24 @@ const EditCoursePage = () => {
     "EnrollmentSection" | "MemberSection" | "ImformationSection"
   >("ImformationSection")
 
+  const navigation = useNavigation()
+
   // Other functions //
   const sendData = () => {
     console.log("Saving data...")
+
+    navigation.goBack()
   }
 
   const goBack = () => {
     console.log("Bringing you back...")
+    navigation.goBack()
   }
 
-  const deleleCourse = () => {
+  const deleteCourse = () => {
     console.log("Deleting the course...")
+
+    navigation.goBack()
   }
 
   return (
@@ -103,7 +111,7 @@ const EditCoursePage = () => {
           <Text
             style={{ color: "black", margin: "3%", paddingHorizontal: "2%" }}
           >
-            Imformation
+            Information
           </Text>
         </TouchableOpacity>
 
@@ -135,13 +143,36 @@ const EditCoursePage = () => {
       </View>
 
       {pageState == "ImformationSection" ? (
-        <EditCourseInfo
-          courseInfo={courseInfo}
-          setCourseInfo={setCourseInfo}
-          onSave={sendData}
-          goBack={goBack}
-          deleteCourse={deleleCourse}
-        />
+        <ScrollView>
+          <EditCourseInfo
+            courseInfo={courseInfo}
+            setCourseInfo={setCourseInfo}
+            // onSave={sendData}
+            // goBack={goBack}
+            // deleteCourse={deleleCourse}
+          />
+          <View style={{ paddingHorizontal: "5%" }}>
+            <Button
+              mode="contained"
+              color="dodgerblue"
+              onPress={sendData}
+              style={{ marginBottom: "3%" }}
+            >
+              Save Changes
+            </Button>
+            <Button
+              mode="contained"
+              color="gold"
+              onPress={goBack}
+              style={{ marginBottom: "8%" }}
+            >
+              Cancel
+            </Button>
+            <Button mode="contained" color="tomato" onPress={deleteCourse}>
+              Delete Course
+            </Button>
+          </View>
+        </ScrollView>
       ) : null}
 
       {pageState == "MemberSection" ? (

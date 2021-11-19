@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react"
 import { View, Text, ScrollView, StyleSheet } from "react-native"
 import { useNavigation, CommonActions } from "@react-navigation/native"
+import { Button } from "react-native-paper"
 
 import { Course } from "../interfaces/courseInterface"
 import CourseCard from "../components/CourseCard"
@@ -39,6 +40,15 @@ const ManageCoursePage: FC = () => {
     )
   }
 
+  const redirectCreateCourse = () => {
+    // console.log("navigating to edit course page...")
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: "CreateCourse",
+      })
+    )
+  }
+
   return (
     <ScrollView style={styles.list}>
       {courseList.map((course, idx) => (
@@ -46,6 +56,15 @@ const ManageCoursePage: FC = () => {
           <CourseCard course={course} onClick={redirectEditCourse} />
         </View>
       ))}
+      <View style={{ marginTop: "10%" }}>
+        <Button
+          mode="outlined"
+          color="dodgerblue"
+          onPress={redirectCreateCourse}
+        >
+          Create New Course
+        </Button>
+      </View>
     </ScrollView>
 
     // </View>

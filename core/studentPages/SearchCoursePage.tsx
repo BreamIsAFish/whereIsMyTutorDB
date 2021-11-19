@@ -386,7 +386,7 @@ const SearchCoursePage = () => {
                     }}
                   >
                     <RadioButton
-                      value="value"
+                      value="Online"
                       status={
                         learningType === "Online" ? "checked" : "unchecked"
                       }
@@ -403,7 +403,7 @@ const SearchCoursePage = () => {
                     }}
                   >
                     <RadioButton
-                      value="value"
+                      value="Offline"
                       status={
                         learningType === "Offline" ? "checked" : "unchecked"
                       }
@@ -419,7 +419,7 @@ const SearchCoursePage = () => {
                     }}
                   >
                     <RadioButton
-                      value="value"
+                      value="Mixed"
                       status={
                         learningType === "Mixed" ? "checked" : "unchecked"
                       }

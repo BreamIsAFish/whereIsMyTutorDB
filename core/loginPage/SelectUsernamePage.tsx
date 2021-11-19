@@ -1,14 +1,19 @@
-import React, { useState } from "react"
-import { View, Text, ScrollView, StyleSheet, TextInput, Modal, Alert, Pressable, } from "react-native"
-import { RadioButton, Divider, List, Provider } from 'react-native-paper';
+import React, { useState, useEffect } from "react"
+import { View, StyleSheet } from "react-native"
+// import { useAsyncStorage } from "@react-native-async-storage/async-storage"
+import { Provider } from "react-native-paper"
 import DropDown from "react-native-paper-dropdown"
 
-import CourseCard from "../components/CourseCard"
-import { Course } from "../interfaces/courseInterface"
-
+import { loadUsername, saveUsername } from "../util/AsyncStorage"
 
 const SelectUsernamePage = () => {
-  
+  // States //
+  const [activeStudentUsername, setActiveStudentUsername] = useState<string>("")
+  const [activeTutorUsername, setActiveTutorUsername] = useState<string>("")
+  const [showStudentUsernameDropDown, setShowStudentUsernameDropDown] =
+    useState<boolean>(false)
+  const [showTutorUsernameDropDown, setShowTutorUsernameDropDown] =
+    useState<boolean>(false)
 
   const studentUsernameList = [
     {
@@ -31,7 +36,7 @@ const SelectUsernamePage = () => {
       label: "Student5",
       value: "Student5",
     },
-  ];
+  ]
   const tutorUsernameList = [
     {
       label: "Tutor1",
@@ -53,47 +58,83 @@ const SelectUsernamePage = () => {
       label: "Tutor5",
       value: "Tutor5",
     },
-  ];
-  const [activeStudentUsername, setActiveStudentUsername] = useState<string>("");
-  const [activeTutorUsername, setActiveTutorUsername] = useState<string>("");
-  const [showStudentUsernameDropDown, setShowStudentUsernameDropDown] = useState<boolean>(false);
-  const [showTutorUsernameDropDown, setShowTutorUsernameDropDown] = useState<boolean>(false);
- 
+  ]
+
+  // const { getItem, setItem } = useAsyncStorage("@username")
+
+  // useEffects //
+  useEffect(() => {
+    ;(async () => {
+      console.log("Loding username...")
+      // loadUsername()
+      const [studentUsername, tutorUsername] = await loadUsername()
+      setActiveStudentUsername(studentUsername)
+      setActiveTutorUsername(tutorUsername)
+    })()
+  }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      console.log("Saving username...")
+      await saveUsername(activeStudentUsername, activeTutorUsername)
+    })()
+  }, [activeStudentUsername, activeTutorUsername])
+
+  // Other functions //
+  // const loadUsername = async () => {
+  //   const username = await getItem()
+  //   if (username) {
+  //     setActiveStudentUsername(username.split(",")[0])
+  //     setActiveTutorUsername(username.split(",")[1])
+  //   }
+  // }
+
+  // const saveUsername = async (
+  //   studentUsername: string,
+  //   tutorUsername: string
+  // ) => {
+  //   // save string => "{studentUsername},{tutorUsername}" to storage //
+  //   await setItem(`${studentUsername},${tutorUsername}`)
+  // }
 
   return (
     <View style={styles.page}>
-        <View style={{width:"90%" ,flexDirection: "row", marginTop:"10%"}}>
-        <Provider >
-            <DropDown
-                label={"Student Username"}
-                mode={"outlined"}
-                visible={showStudentUsernameDropDown}
-                showDropDown={() => {setShowStudentUsernameDropDown(true),console.log({activeStudentUsername})}}
-                onDismiss={() => setShowStudentUsernameDropDown(false)}
-                value={activeStudentUsername}
-                setValue={setActiveStudentUsername}
-                list={studentUsernameList}
-                placeholder={"Select your Student Username"}
-                dropDownStyle={{marginVertical: 50}}
-                />
-            <DropDown
-                label={"Tutor Username"}
-                mode={"outlined"}
-                visible={showTutorUsernameDropDown}
-                showDropDown={() => {setShowTutorUsernameDropDown(true),console.log({activeTutorUsername})}}
-                onDismiss={() => setShowTutorUsernameDropDown(false)}
-                value={activeStudentUsername}
-                setValue={setActiveTutorUsername}
-                list={tutorUsernameList}
-                placeholder={"Select your Tutor Username"}
-                />
+      <View style={{ width: "90%", flexDirection: "row", marginTop: "10%" }}>
+        <Provider>
+          <DropDown
+            label={"Student Username"}
+            mode={"outlined"}
+            visible={showStudentUsernameDropDown}
+            showDropDown={() => {
+              setShowStudentUsernameDropDown(true),
+                console.log({ activeStudentUsername })
+            }}
+            onDismiss={() => setShowStudentUsernameDropDown(false)}
+            value={activeStudentUsername}
+            setValue={setActiveStudentUsername}
+            list={studentUsernameList}
+            placeholder={"Select your Student Username"}
+            dropDownStyle={{ marginVertical: "10%" }}
+          />
+          <DropDown
+            label={"Tutor Username"}
+            mode={"outlined"}
+            visible={showTutorUsernameDropDown}
+            showDropDown={() => {
+              setShowTutorUsernameDropDown(true),
+                console.log({ activeTutorUsername })
+            }}
+            onDismiss={() => setShowTutorUsernameDropDown(false)}
+            value={activeTutorUsername}
+            setValue={setActiveTutorUsername}
+            list={tutorUsernameList}
+            placeholder={"Select your Tutor Username"}
+          />
         </Provider>
-        </View>
+      </View>
     </View>
   )
 }
-
-
 
 const styles = StyleSheet.create({
   page: {

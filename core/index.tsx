@@ -5,6 +5,7 @@ import BottomTabs from "../core/navigation/BottomTabs"
 import CourseInfoPage from "./studentPages/CourseInfoPage"
 import ManageCoursePage from "./tutorPages/ManageCoursePage"
 import EditCoursePage from "./tutorPages/EditCoursePage"
+import CreateCoursePage from "./tutorPages/CreateCoursePage"
 
 const Stack = createStackNavigator()
 
@@ -22,7 +23,7 @@ export const Index = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={"Search"}
+      initialRouteName={"Username"}
       screenOptions={{ headerShown: true }}
     >
       <>
@@ -37,6 +38,7 @@ export const Index = () => {
       <Stack.Screen name="ViewCourseInfo" component={CourseInfoPage} />
       <Stack.Screen name="EditCourseInfo" component={EditCoursePage} />
       <Stack.Screen name="Manage" component={ManageCoursePage} />
+      <Stack.Screen name="CreateCourse" component={CreateCoursePage} />
     </Stack.Navigator>
   )
 }
