@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { View, Text, ScrollView, StyleSheet, TextInput, Modal, Alert, Pressable, } from "react-native"
-import { RadioButton } from 'react-native-paper';
+import { RadioButton, Divider, List } from 'react-native-paper';
 
 import CourseCard from "../components/CourseCard"
 import { Course } from "../interfaces/courseInterface"
@@ -36,11 +36,23 @@ const SearchCoursePage = () => {
       tutorName: "Dr. Kommuay",
     }, // Just test example, can be delete
   ])
+  const [subjectList, setSubjectList] = useState<string[]>([
+    "All",
+    "Mathematic",
+    "Science",
+    "History",
+    "Sociology",
+    "Biology",
+    "Chemistry",
+    "Physic",
+  ])
   const [text, onChangeText] = React.useState("");
   const [filterVisible, setFilterVisible] = useState(false);
-  const [sortType, setSortType] = React.useState("price");
   const [priceRate, setPriceRate] = React.useState("All");
   const [courseDay, setCourseDay] = React.useState("Mixed");
+  const [subject, setSubject] = React.useState("All");
+  const [sortType, setSortType] = React.useState("price");
+  const [ascending, setAscending] = React.useState(true);
 
   return (
     <View style={styles.page}>
@@ -63,7 +75,13 @@ const SearchCoursePage = () => {
             <Text style={styles.textStyle}>Add filter</Text>
           </Pressable>
         </View>
-        <View style={{ flexDirection: "row",}}>
+        <View style={{ flexDirection: "row", alignItems: "center",}}>
+          <Pressable
+            style={{ backgroundColor: "gray", width: 50}}
+            onPress={() => setAscending(!ascending)}
+          >
+            <Text style={styles.textStyle}>{(ascending) ? "Asc": "Des"}</Text>
+          </Pressable>
           <View style={{ flexDirection: "row", alignItems: "center",}}>
             <RadioButton
               value="Sort by Price"
@@ -92,7 +110,7 @@ const SearchCoursePage = () => {
           </View>
         ))}
       </ScrollView>
-
+      
       <Modal
         animationType="slide"
         transparent={true}
@@ -102,15 +120,25 @@ const SearchCoursePage = () => {
           setFilterVisible(!filterVisible);
         }}
       >
+        <ScrollView>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Filter</Text>
-
+            <Divider />
             <View style={{width: 280, backgroundColor:"white"}}>
+              <Divider />
               <Text>Subject:</Text>
-
-              <Text>                        </Text>
-
+              <List.Accordion
+                title={subject}
+                style={{ padding: 0}}>
+                {subjectList.map((subjectName, idx) => (
+                  <List.Item style={{ paddingVertical: 0}} 
+                    title={subjectName} 
+                    onPress={() => setSubject(subjectName)}
+                  />
+                ))}
+              </List.Accordion>
+              <Divider />
               <Text>Price Rate:</Text>
 
               <View style={{ flexDirection: "row",}}>
@@ -196,12 +224,13 @@ const SearchCoursePage = () => {
                   <Text>Mixed</Text>
                 </View>
               </View>
+              <Divider />
             </View>
 
             <View style={{ flexDirection: "row", alignItems: "center", marginTop: "5%"}}>
               <Pressable
                 style={[styles.button, styles.buttonClearFilter]}
-                onPress={() => {setCourseDay('Mixed'),setPriceRate('All')}}
+                onPress={() => {setCourseDay('Mixed'), setPriceRate('All'), setSubject('All')}}
               >
                 <Text style={styles.textStyle}>Clear</Text>
               </Pressable>
@@ -214,7 +243,9 @@ const SearchCoursePage = () => {
             </View>
           </View>
         </View>
+        </ScrollView>
       </Modal>
+      
     </View>
   )
 }
