@@ -1,19 +1,10 @@
-import React, { useState } from "react"
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  Modal,
-  Alert,
-  Pressable,
-} from "react-native"
-import { RadioButton, Divider, List, Provider } from "react-native-paper"
+import React, { useState, useEffect } from "react"
+import { View, StyleSheet } from "react-native"
+// import { useAsyncStorage } from "@react-native-async-storage/async-storage"
+import { Provider } from "react-native-paper"
 import DropDown from "react-native-paper-dropdown"
 
-import CourseCard from "../components/CourseCard"
-import { Course } from "../interfaces/courseInterface"
+import { loadUsername, saveUsername } from "../util/AsyncStorage"
 
 const SelectUsernamePage = () => {
   // States //
@@ -69,6 +60,43 @@ const SelectUsernamePage = () => {
     },
   ]
 
+  // const { getItem, setItem } = useAsyncStorage("@username")
+
+  // useEffects //
+  useEffect(() => {
+    ;(async () => {
+      console.log("Loding username...")
+      // loadUsername()
+      const [studentUsername, tutorUsername] = await loadUsername()
+      setActiveStudentUsername(studentUsername)
+      setActiveTutorUsername(tutorUsername)
+    })()
+  }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      console.log("Saving username...")
+      await saveUsername(activeStudentUsername, activeTutorUsername)
+    })()
+  }, [activeStudentUsername, activeTutorUsername])
+
+  // Other functions //
+  // const loadUsername = async () => {
+  //   const username = await getItem()
+  //   if (username) {
+  //     setActiveStudentUsername(username.split(",")[0])
+  //     setActiveTutorUsername(username.split(",")[1])
+  //   }
+  // }
+
+  // const saveUsername = async (
+  //   studentUsername: string,
+  //   tutorUsername: string
+  // ) => {
+  //   // save string => "{studentUsername},{tutorUsername}" to storage //
+  //   await setItem(`${studentUsername},${tutorUsername}`)
+  // }
+
   return (
     <View style={styles.page}>
       <View style={{ width: "90%", flexDirection: "row", marginTop: "10%" }}>
@@ -86,7 +114,7 @@ const SelectUsernamePage = () => {
             setValue={setActiveStudentUsername}
             list={studentUsernameList}
             placeholder={"Select your Student Username"}
-            dropDownStyle={{ marginVertical: 50 }}
+            dropDownStyle={{ marginVertical: "10%" }}
           />
           <DropDown
             label={"Tutor Username"}
@@ -97,7 +125,7 @@ const SelectUsernamePage = () => {
                 console.log({ activeTutorUsername })
             }}
             onDismiss={() => setShowTutorUsernameDropDown(false)}
-            value={activeStudentUsername}
+            value={activeTutorUsername}
             setValue={setActiveTutorUsername}
             list={tutorUsernameList}
             placeholder={"Select your Tutor Username"}

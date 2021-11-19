@@ -19,9 +19,9 @@ import {
 interface EditCourseInfoProp {
   courseInfo: CourseInformations
   setCourseInfo: React.Dispatch<React.SetStateAction<CourseInformations>>
-  onSave: () => void
-  goBack: () => void
-  deleteCourse: () => void
+  // onSave: () => void
+  // goBack: () => void
+  // deleteCourse: () => void
 }
 
 type Day =
@@ -36,9 +36,9 @@ type Day =
 const EditCourseInfo: FC<EditCourseInfoProp> = ({
   courseInfo,
   setCourseInfo,
-  onSave,
-  goBack,
-  deleteCourse,
+  // onSave,
+  // goBack,
+  // deleteCourse,
 }) => {
   // States //
   const [lessonInput, setLessonInput] = useState<string>("")
@@ -202,6 +202,7 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: "5%",
+          marginBottom: "5%",
         }}
       >
         {/* {courseInfo.courseImage ? (
@@ -365,7 +366,7 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
           }
         />
         {/* <View style={{ justifyContent: "center" }}> */}
-        <Button
+        {/* <Button
           mode="contained"
           color="dodgerblue"
           onPress={onSave}
@@ -383,7 +384,7 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
         </Button>
         <Button mode="contained" color="tomato" onPress={deleteCourse}>
           Delete Course
-        </Button>
+        </Button> */}
         {/* </View> */}
       </ScrollView>
     </Provider>
