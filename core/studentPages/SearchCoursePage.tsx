@@ -39,26 +39,26 @@ const SearchCoursePage = () => {
     }, // Just test example, can be delete
   ])
 
-
-
-
-  const [subjectList, setSubjectList] = useState<string[]>([
-    "All",
-    "Mathematic",
-    "Science",
-    "History",
-    "Sociology",
-    "Biology",
-    "Chemistry",
-    "Physic",
-  ])
-  const [searchText, setSearchText] = useState<string>("");
+  // const [subjectList, setSubjectList] = useState<string[]>([
+  //   "All",
+  //   "Mathematic",
+  //   "Science",
+  //   "History",
+  //   "Sociology",
+  //   "Biology",
+  //   "Chemistry",
+  //   "Physic",
+  // ])
+  const [search, setSearch] = useState<string>("");
   const [filterVisible, setFilterVisible] = useState<boolean>(false);
   const [priceRate, setPriceRate] = useState<PriceRate>("All");
+  const [min, setMin] = useState<number>(0);
+  const [max, setMax] = useState<number>(-1);
   const [courseDay, setCourseDay] = useState<"Mixed"|"Weekend"|"Weekday">("Mixed");
-  const [subjectName, setSubjectName] = useState<string>("");
+  const [learningType, setLearningType] = useState<"Mixed"|"Online"|"Offline">("Mixed");
+  const [subject, setSubject] = useState<string>("");
   const [sortType, setSortType] = useState<"Price"|"Date">("Price");
-  const [ascending, setAscending] = useState<boolean>(true);
+  const [isAscending, setIsAscending] = useState<boolean>(true);
 
   return (
     <View style={styles.page}>
@@ -69,8 +69,8 @@ const SearchCoursePage = () => {
         <View style={{ flexDirection: "row" , height: 40}}>
           <TextInput
             style={styles.input}
-            onChangeText={setSearchText}
-            value={searchText}
+            onChangeText={setSearch}
+            value={search}
             placeholder="Search bar"
 
           />
@@ -84,9 +84,9 @@ const SearchCoursePage = () => {
         <View style={{ flexDirection: "row", alignItems: "center",}}>
           <Pressable
             style={{ backgroundColor: "gray", width: 50}}
-            onPress={() => setAscending(!ascending)}
+            onPress={() => setIsAscending(!isAscending)}
           >
-            <Text style={styles.textStyle}>{(ascending) ? "Asc": "Des"}</Text>
+            <Text style={styles.textStyle}>{(isAscending) ? "Asc": "Des"}</Text>
           </Pressable>
           <View style={{ flexDirection: "row", alignItems: "center",}}>
             <RadioButton
@@ -146,8 +146,8 @@ const SearchCoursePage = () => {
               </List.Accordion> */}
               <TextInput
                 style={styles.input}
-                onChangeText={setSubjectName}
-                value={subjectName}
+                onChangeText={setSubject}
+                value={subject}
                 placeholder="Key Your subject name?"
               />
               <Divider />
@@ -158,7 +158,11 @@ const SearchCoursePage = () => {
                   <RadioButton
                     value="value"
                     status={ priceRate === '0 - 500 Bath' ? 'checked' : 'unchecked' }
-                    onPress={() => setPriceRate('0 - 500 Bath')}
+                    onPress={() => {
+                      setPriceRate('0 - 500 Bath'),
+                      setMin(0), 
+                      setMax(500), 
+                      console.log("set min:",{min},", max:",{max})}}
                   />
                   <Text>0 - 500 Bath</Text>
                 </View>
@@ -166,7 +170,11 @@ const SearchCoursePage = () => {
                   <RadioButton
                     value="value"
                     status={ priceRate === '500 - 1000 Bath' ? 'checked' : 'unchecked' }
-                    onPress={() => setPriceRate('500 - 1000 Bath')}
+                    onPress={() => {
+                      setPriceRate('500 - 1000 Bath'),
+                      setMin(500), 
+                      setMax(1000), 
+                      console.log("set min:",{min},", max:",{max})}}
                   />
                   <Text>500 - 1000 Bath</Text>
                 </View>
@@ -176,7 +184,11 @@ const SearchCoursePage = () => {
                   <RadioButton
                     value="value"
                     status={ priceRate === '1000 - 2000 Bath' ? 'checked' : 'unchecked' }
-                    onPress={() => setPriceRate('1000 - 2000 Bath')}
+                    onPress={() => {
+                      setPriceRate('1000 - 2000 Bath'),
+                      setMin(1000), 
+                      setMax(2000), 
+                      console.log("set min:",{min},", max:",{max})}}
                   />
                   <Text>1000 - 2000 Bath</Text>
                 </View>
@@ -184,7 +196,11 @@ const SearchCoursePage = () => {
                   <RadioButton
                     value="value"
                     status={ priceRate === '2000 - 3000 Bath' ? 'checked' : 'unchecked' }
-                    onPress={() => setPriceRate('2000 - 3000 Bath')}
+                    onPress={() => {
+                      setPriceRate('2000 - 3000 Bath'),
+                      setMin(2000), 
+                      setMax(3000), 
+                      console.log("set min:",{min},", max:",{max})}}
                   />
                   <Text>2000 - 3000 Bath</Text>
                 </View>
@@ -194,7 +210,11 @@ const SearchCoursePage = () => {
                   <RadioButton
                     value="value"
                     status={ priceRate === '3000++ Bath' ? 'checked' : 'unchecked' }
-                    onPress={() => setPriceRate('3000++ Bath')}
+                    onPress={() => {
+                      setPriceRate('3000++ Bath'),
+                      setMin(3000), 
+                      setMax(1000000), 
+                      console.log("set min:",{min},", max:",{max})}}
                   />
                   <Text>3000++ Bath</Text>
                 </View>
@@ -202,7 +222,11 @@ const SearchCoursePage = () => {
                   <RadioButton
                     value="value"
                     status={ priceRate === 'All' ? 'checked' : 'unchecked' }
-                    onPress={() => setPriceRate('All')}
+                    onPress={() => {
+                      setPriceRate('All'),
+                      setMin(0), 
+                      setMax(-1), 
+                      console.log("set min:",{min},", max:",{max})}}
                   />
                   <Text>All</Text>
                 </View>
@@ -236,13 +260,49 @@ const SearchCoursePage = () => {
                   <Text>Mixed</Text>
                 </View>
               </View>
+
+              <Text>Learning Type:</Text>
+
+              <View style={{ flexDirection: "row",}}>
+                <View style={{ flexDirection: "row", alignItems: "center", width: 90}}>
+                  <RadioButton
+                    value="value"
+                    status={ learningType === 'Online' ? 'checked' : 'unchecked' }
+                    onPress={() => setLearningType('Online')}
+                  />
+                  <Text>Online</Text>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center", width: 90, marginLeft: "2%"}}>
+                  <RadioButton
+                    value="value"
+                    status={ learningType === 'Offline' ? 'checked' : 'unchecked' }
+                    onPress={() => setLearningType('Offline')}
+                  />
+                  <Text>Offline</Text>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center", marginLeft: "2%"}}>
+                  <RadioButton
+                    value="value"
+                    status={ learningType === 'Mixed' ? 'checked' : 'unchecked' }
+                    onPress={() => setLearningType('Mixed')}
+                  />
+                  <Text>Mixed</Text>
+                </View>
+              </View>
+
               <Divider />
             </View>
 
             <View style={{ flexDirection: "row", alignItems: "center", marginTop: "5%"}}>
               <Pressable
                 style={[styles.button, styles.buttonClearFilter]}
-                onPress={() => {setCourseDay('Mixed'), setPriceRate('All'), setSubjectName('')}}
+                onPress={() => {setCourseDay('Mixed'), 
+                  setPriceRate('All'), 
+                  setSubject(''), 
+                  setMin(0), 
+                  setMax(-1), 
+                  setLearningType('Mixed'),
+                  console.log("set min:",{min},", max:",{max})}}
               >
                 <Text style={styles.textStyle}>Clear</Text>
               </Pressable>
