@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 
 import SearchCoursePage from "../studentPages/SearchCoursePage"
 import ManageCoursePage from "../tutorPages/ManageCoursePage"
+import SelectUsernamePage from "../loginPage/SelectUsernamePage"
 
 const Tab = createBottomTabNavigator()
 const BottomTabs = () => {
@@ -26,6 +27,23 @@ const BottomTabs = () => {
         // }}
       >
         <Tab.Screen
+          name="Username"
+          component={SelectUsernamePage}
+          options={{
+            tabBarIcon: ({ focused }: any) => (
+              <Image
+                source={require("../../assets/icons/Person.png")}
+                resizeMode="contain"
+                style={{
+                  width: 25,
+                  height: 25,
+                  // tintColor: focused ? COLORS.primary : COLORS.darkgrey,
+                }}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
           name="Search"
           component={SearchCoursePage}
           options={{
@@ -41,7 +59,7 @@ const BottomTabs = () => {
               />
             ),
           }}
-        ></Tab.Screen>
+        />
         <Tab.Screen
           name="Manage"
           component={ManageCoursePage}
@@ -58,7 +76,7 @@ const BottomTabs = () => {
               />
             ),
           }}
-        ></Tab.Screen>
+        />
       </Tab.Navigator>
     </SafeAreaView>
   )

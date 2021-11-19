@@ -7,6 +7,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 import MemberCard from "../components/MemberCard"
 import EnrollmentCard from "../components/ErollmentCard"
@@ -75,17 +76,24 @@ const EditCoursePage = () => {
     "EnrollmentSection" | "MemberSection" | "ImformationSection"
   >("ImformationSection")
 
+  const navigation = useNavigation()
+
   // Other functions //
   const sendData = () => {
     console.log("Saving data...")
+
+    navigation.goBack()
   }
 
   const goBack = () => {
     console.log("Bringing you back...")
+    navigation.goBack()
   }
 
   const deleleCourse = () => {
     console.log("Deleting the course...")
+
+    navigation.goBack()
   }
 
   return (
