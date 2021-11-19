@@ -29,7 +29,7 @@ const EditCoursePage = () => {
     capacity: 0,
     learningType: "Mixed",
     description: "",
-    amountOfWeek: 0,
+    courseHour: 0,
   })
   const [memberList, setMemberList] = useState<Member[]>([
     {
@@ -74,6 +74,19 @@ const EditCoursePage = () => {
   const [pageState, setPageState] = useState<
     "EnrollmentSection" | "MemberSection" | "ImformationSection"
   >("ImformationSection")
+
+  // Other functions //
+  const sendData = () => {
+    console.log("Saving data...")
+  }
+
+  const goBack = () => {
+    console.log("Bringing you back...")
+  }
+
+  const deleleCourse = () => {
+    console.log("Deleting the course...")
+  }
 
   return (
     <View style={styles.page}>
@@ -122,7 +135,13 @@ const EditCoursePage = () => {
       </View>
 
       {pageState == "ImformationSection" ? (
-        <EditCourseInfo courseInfo={courseInfo} setCourseInfo={setCourseInfo} />
+        <EditCourseInfo
+          courseInfo={courseInfo}
+          setCourseInfo={setCourseInfo}
+          onSave={sendData}
+          goBack={goBack}
+          deleteCourse={deleleCourse}
+        />
       ) : null}
 
       {pageState == "MemberSection" ? (
@@ -150,7 +169,7 @@ const EditCoursePage = () => {
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: "10%",
+    paddingVertical: "10%",
     height: "100%",
   },
   scrollSection: {
@@ -163,6 +182,7 @@ const styles = StyleSheet.create({
   ChooseSection: {
     marginLeft: "5%",
     marginRight: "5%",
+    marginBottom: "5%",
     flexDirection: "row",
     borderColor: "gray",
     borderWidth: 3,

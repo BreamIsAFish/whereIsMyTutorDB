@@ -11,7 +11,7 @@ const ViewCourseInfo: FC<{ courseInfo: CourseInformations }> = ({
   const renderTimeSlot = () => (
     <ScrollView style={{ padding: "3%" }}>
       {Object.keys(courseInfo.timeslots).map((day) => {
-        courseInfo.timeslots[day].map((slot, idx) => (
+        return courseInfo.timeslots[day].map((slot, idx) => (
           <Text key={day + idx}>{`${day} | ${slot.start} : ${slot.end}`}</Text>
         ))
       })}
@@ -43,7 +43,7 @@ const ViewCourseInfo: FC<{ courseInfo: CourseInformations }> = ({
         <Text>{`Learning type : ${courseInfo.learningType}`}</Text>
         <Text>Description : </Text>
         <Text>{courseInfo.description}</Text>
-        <Text>{`Amount of week : ${courseInfo.amountOfWeek}`}</Text>
+        <Text>{`Course Hour : ${courseInfo.courseHour}`}</Text>
       </View>
     </ScrollView>
   )

@@ -19,7 +19,7 @@ export interface CourseInformations {
   capacity: number // max student
   learningType: LearningType
   description: string
-  amountOfWeek: number
+  courseHour: number
 }
 
 export interface Slot {

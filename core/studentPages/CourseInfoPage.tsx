@@ -33,19 +33,19 @@ const CourseInfoPage: FC = () => {
     capacity: 69,
     learningType: "Mixed",
     description: "KUKUKUKUKUKUKUYYYYYYYYYY",
-    amountOfWeek: 13,
+    courseHour: 13,
   })
   const [reviewList, setReviewList] = useState<Review[]>([
     {
-        reviwerName: "Veerin",
-        rating: 4.5,
-        comment: "good but not job",
-      }, // Just test example, can be delete
-      {
-        reviwerName: "Komsorn",
-        rating: 4,
-        comment: "not good but not job",
-      }, // Just test example, can be delete
+      reviwerName: "Veerin",
+      rating: 4.5,
+      comment: "good but not job",
+    }, // Just test example, can be delete
+    {
+      reviwerName: "Komsorn",
+      rating: 4,
+      comment: "not good but not job",
+    }, // Just test example, can be delete
   ])
 
   // fetch //
@@ -93,13 +93,13 @@ const CourseInfoPage: FC = () => {
         <ViewCourseInfo courseInfo={courseInfo} />
       ) : (
         <View style={styles.page}>
-            <ScrollView style={styles.scrollSection}>
-                {reviewList.map((review, idx) => (
-                <View key={idx} style={styles.card}>
-                    <ReviewCard review={review} />
-                </View>
-                ))}
-            </ScrollView>
+          <ScrollView style={styles.scrollSection}>
+            {reviewList.map((review, idx) => (
+              <View key={idx} style={styles.card}>
+                <ReviewCard review={review} />
+              </View>
+            ))}
+          </ScrollView>
         </View>
       )}
     </View>
