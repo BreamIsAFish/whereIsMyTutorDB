@@ -9,6 +9,7 @@ import {
   Alert,
   Pressable,
 } from "react-native"
+import { useNavigation, CommonActions } from "@react-navigation/native"
 import { RadioButton, Divider, List } from "react-native-paper"
 
 import CourseCard from "../components/CourseCard"
@@ -79,6 +80,19 @@ const SearchCoursePage = () => {
   const [sortType, setSortType] = useState<"Price" | "Date">("Price")
   const [isAscending, setIsAscending] = useState<boolean>(true)
 
+  // useNavigation //
+  const navigation = useNavigation()
+
+  // other functions //
+  const redirectCourseInfo = () => {
+    console.log("navigating to edit course page...")
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: "ViewCourseInfo",
+      })
+    )
+  }
+
   return (
     <View style={styles.page}>
       {/* <Text style={{ textAlign: "center" }}>
@@ -135,7 +149,7 @@ const SearchCoursePage = () => {
       <ScrollView style={styles.scrollSection}>
         {courseList.map((course, idx) => (
           <View key={idx} style={styles.card}>
-            <CourseCard course={course} />
+            <CourseCard course={course} onClick={redirectCourseInfo} />
           </View>
         ))}
       </ScrollView>
