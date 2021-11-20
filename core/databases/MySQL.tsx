@@ -45,8 +45,8 @@ export const getCourseInfo = async (
     tutorUsername: string
     courseId: string
   }[]
-) => {
-  var x = null
+): Promise<MinorCourseInfoDto[]> => {
+  var x: MinorCourseInfoDto[] = []
   var tList: string[] = []
   var cList: string[] = []
   l.forEach((e) => {

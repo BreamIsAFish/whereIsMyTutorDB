@@ -12,25 +12,23 @@ import { Button } from "react-native-paper"
 import MemberCard from "../components/MemberCard"
 import EnrollmentCard from "../components/ErollmentCard"
 import EditCourseInfo from "../components/EditCourseInfo"
-import {
-  Member,
-  Enrollment,
-  CourseInformations,
-} from "../interfaces/courseInterface"
+import { Member, Enrollment } from "../interfaces/courseInterface"
+import { AddCourseDto } from "../interfaces/dto"
 
 const EditCoursePage = () => {
   // states //
-  const [courseInfo, setCourseInfo] = useState<CourseInformations>({
-    courseImage: undefined,
+  const [courseInfo, setCourseInfo] = useState<AddCourseDto>({
     courseName: "",
-    subjectName: "",
-    lessonList: [],
-    timeslots: {},
+    subject: "",
+    lesson: [],
+    timeSlot: {},
     price: 0,
     capacity: 0,
     learningType: "Mixed",
     description: "",
     courseHour: 0,
+    tutorUsername: "",
+    createDate: new Date(),
   })
   const [memberList, setMemberList] = useState<Member[]>([
     {

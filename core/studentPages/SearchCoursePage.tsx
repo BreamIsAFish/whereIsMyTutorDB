@@ -151,19 +151,31 @@ const SearchCoursePage = () => {
     }
   }
 
-  // const fetchCourseMinorInfo = async () => {
-  //   let list: MinorCourseInfoList = {}
-  //   if (courseList) {
-  //     for (const course of courseList) {
-  //       const minorInfo = await getCourseInfo({
-  //         tutorUsername: course.tutorUsername,
-  //         courseId: course.courseId,
-  //       })
-  //       list[minorInfo.courseId] = minorInfo
-  //     }
-  //     setMinorInfoList(list)
-  //   }
-  // }
+  const fetchCourseMinorInfo = async () => {
+    let list: MinorCourseInfoList = {}
+    if (courseList) {
+      // for (const course of courseList) {
+      //   const minorInfo = await getCourseInfo({
+      //     tutorUsername: course.tutorUsername,
+      //     courseId: course.courseId,
+      //   })
+      //   list[minorInfo.courseId] = minorInfo
+      // }
+      // setMinorInfoList(list)
+      const minorInfo = await getCourseInfo(
+        courseList.map((course) => {
+          return {
+            tutorUsername: course.tutorUsername,
+            courseId: course.courseId,
+          }
+        })
+      )
+      for (const info of minorInfo) {
+        list[info.courseId] = info
+      }
+      setMinorInfoList(list)
+    }
+  }
 
   // Other functions //
   const redirectCourseInfo = () => {

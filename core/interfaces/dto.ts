@@ -18,7 +18,7 @@ export interface AddCourseDto {
   learningType: string
   description: string
   courseHour: number
-	createDate: string
+	createDate: Date
 }
 
 export interface CourseInfoDto {
