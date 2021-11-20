@@ -9,15 +9,6 @@ interface CourseCardProp {
 }
 
 const CourseCard: FC<CourseCardProp> = ({ course, onClick }) => {
-  // const [courseName, setCourseName] = useState('Calculuay เรียนแล้วรวย')
-  // const [subjectName, setSubjectName] = useState('Mathematics')
-  // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
-  // const [courseDay, setCourseDay] = useState(['Monday', 'Wednesday'])
-  // const [capacity, setCapacity] = useState(0)
-  // const [maxCapacity, setMaxCapacity] = useState(0)
-  // const [rating, setRating] = useState(0)
-  // const [tutorName, setTutorName] = useState('Dr. Kommuay')
-
   const defaultClick = () => {
     console.log("Kuy Pond")
   }
@@ -44,11 +35,11 @@ const CourseCard: FC<CourseCardProp> = ({ course, onClick }) => {
               <Text key={idx}>{lesson}</Text>
             ))}
           </View>
-          <View style={{ flexDirection: "row" }}>
+          {/* <View style={{ flexDirection: "row" }}>
             {course.courseDay.map((day, idx) => (
               <Text key={idx}>{day}</Text>
             ))}
-          </View>
+          </View> */}
           <View style={{ flexDirection: "row" }}>
             <Text>{course.rating ? "Rating: " + course.rating : ""}</Text>
             <Text>

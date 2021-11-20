@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import {
   View,
   Text,
@@ -51,7 +51,7 @@ const SearchCoursePage = () => {
       courseName: "Caluluay เรียนแล้วรวย",
       subjectName: "Mathematics",
       lessonList: ["Calculus", "Linear Algebra"],
-      courseDay: ["Monday", "Tuesday"],
+      // courseDay: ["Monday", "Tuesday"],
       capacity: 13,
       maxCapacity: 69,
       rating: 3.6,
@@ -139,7 +139,7 @@ const SearchCoursePage = () => {
           courseName: course.courseName,
           subjectName: course.subject,
           lessonList: course.lesson,
-          courseDay: Object.keys(course.timeSlot),
+          // courseDay: Object.keys(course.timeSlot),
           maxCapacity: course.capacity,
           capacity: 0,
           rating: 0,

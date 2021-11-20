@@ -1,7 +1,5 @@
-import React from "react"
-import { useState } from "react"
-
 import firebase from "./Firebase"
+
 import {
   AddCourseDto,
   CourseInfoDto,
@@ -11,25 +9,6 @@ import {
 import { TimeSlots } from "../interfaces/courseInterface"
 
 const ref = firebase.firestore().collection("courses")
-
-// const [data, setData] = useState([])
-// const [keyword, setKeyword] = useState("")
-// const [searchResult, setSearchResult] = useState([])
-
-// const config = {
-//   search: keyword, // -> courseName, tutorName, lessonList
-//   subject: "Mathematics",
-//   min: 0, // default is 0
-//   max: -1, // “All” = -1
-//   courseDay: "Weekend", // "Weekend", "Weekday", "Mixed"
-//   learningType: "Online", //"Online", "Offline", "Mixed"
-//   sortType: "Date", // “Date”, “Price”
-//   isAscending: true,
-// }
-
-// useEffect(() => {
-//   getCourse()
-// }, [])
 
 const getCourse = async (): Promise<CourseInfoDto[]> => {
   let courses: CourseInfoDto[] = []
@@ -54,19 +33,6 @@ const getCourse = async (): Promise<CourseInfoDto[]> => {
 }
 
 export const addCourse = async (courseInfo: AddCourseDto) => {
-  // const ncourse = {
-  //   courseName: "Calculus III",
-  //   subject: "Mathematics",
-  //   lesson: ["A"],
-  //   price: 20000,
-  //   learningType: "Online",
-  //   tutorUsername: "Jack",
-  //   timeSlot: {
-  //     Monday: [{ start: "09:00", end: "12:00" }],
-  //     Sunday: [{ start: "09:00", end: "12:00" }],
-  //   },
-  // }
-  // const res = await ref.add(ncourse)
   const res = await ref.add(courseInfo)
   ref.doc(res.id).update({ courseId: res.id, createDate: new Date() })
   return res
@@ -138,19 +104,18 @@ export const getCourseById = async (
   return doc.data() as CourseInfoDto
 }
 
+export const getCourseByTutor = async (
+  tutorUsername: string
+): Promise<CourseInfoDto[]> => {
+  const courses: CourseInfoDto[] = []
+  const snapshot = await ref.where("tutorUsername", "==", tutorUsername).get()
+  snapshot.forEach((doc) => {
+    courses.push(doc.data() as CourseInfoDto)
+  })
+  return courses
+}
+
 export const updateCourse = (courseId: string, courseInfo: UpdateCourseDto) => {
-  // const ncourse = {
-  //   courseName: "Calculus III",
-  //   subject: "Mathematics",
-  //   lesson: ["A"],
-  //   price: 20000,
-  //   learningType: "Online",
-  //   tutorUsername: "Jack",
-  //   timeSlot: {
-  //     Monday: [{ start: "09:00", end: "12:00" }],
-  //     Sunday: [{ start: "09:00", end: "12:00" }],
-  //   },
-  // }
   ref.doc(courseId).update(courseInfo)
 }
 
