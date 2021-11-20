@@ -22,20 +22,21 @@ export interface AddCourseDto {
 }
 
 export interface CourseInfoDto {
-  capacity: number
+  courseId: string
   courseName: string
-  courseHour: number
-  description: string
-  imageURL: string
+  createDate: Date
   learningType: LearningType
   lesson: string[]
   price: number
-  startDate: Date
   subject: string
   timeSlot: TimeSlots
-  courseId: string
   tutorUsername: string
-  createDate: Date
+  
+  capacity: number
+  courseHour: number
+  description: string
+  // imageURL: string
+  // startDate: Date
 }
 
 export interface SearchDto {

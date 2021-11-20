@@ -87,8 +87,11 @@ const SearchCoursePage = () => {
   // useFocusEffect & useEffect //
   useFocusEffect(
     React.useCallback(() => {
-      console.log("Fetching Courses")
-      fetchCourseList()
+      ;(async () => {
+        console.log("Fetching Courses")
+        await fetchCourseList()
+        await fetchCourseMinorInfo()
+      })()
     }, [])
   )
   // useEffect(() => {
@@ -96,29 +99,29 @@ const SearchCoursePage = () => {
   //   fetchCourseList()
   // }, [])
 
-  useEffect(() => {
-    ;(async () => {
-      // console.log(courseList)
-      // await fetchCourseMinorInfo()
-    })()
-  }, [courseList])
-
   // useEffect(() => {
-  //   setCourseList(
-  //     courseList.map((course) => ({
-  //       ...course,
-  //       tutorName: minorInfoList[course.courseId]
-  //         ? minorInfoList[course.courseId].displayName
-  //         : "",
-  //       capacity: minorInfoList[course.courseId]
-  //         ? minorInfoList[course.courseId].numMember
-  //         : -1,
-  //       rating: minorInfoList[course.courseId]
-  //         ? minorInfoList[course.courseId].rating
-  //         : -1,
-  //     }))
-  //   )
-  // }, [minorInfoList])
+  //   ;(async () => {
+  //     console.log(courseList)
+  //     await fetchCourseMinorInfo()
+  //   })()
+  // }, [courseList])
+
+  useEffect(() => {
+    setCourseList(
+      courseList.map((course) => ({
+        ...course,
+        tutorName: minorInfoList[course.courseId]
+          ? minorInfoList[course.courseId].displayName
+          : "",
+        capacity: minorInfoList[course.courseId]
+          ? minorInfoList[course.courseId].numMember
+          : -1,
+        rating: minorInfoList[course.courseId]
+          ? minorInfoList[course.courseId].rating
+          : -1,
+      }))
+    )
+  }, [minorInfoList])
 
   // Fetch data //
   const fetchCourseList = async () => {
@@ -154,14 +157,6 @@ const SearchCoursePage = () => {
   const fetchCourseMinorInfo = async () => {
     let list: MinorCourseInfoList = {}
     if (courseList) {
-      // for (const course of courseList) {
-      //   const minorInfo = await getCourseInfo({
-      //     tutorUsername: course.tutorUsername,
-      //     courseId: course.courseId,
-      //   })
-      //   list[minorInfo.courseId] = minorInfo
-      // }
-      // setMinorInfoList(list)
       const minorInfo = await getCourseInfo(
         courseList.map((course) => {
           return {
@@ -190,9 +185,6 @@ const SearchCoursePage = () => {
 
   return (
     <View style={styles.page}>
-      {/* <Text style={{ textAlign: "center" }}>
-        {"======== Search bar ======="}
-      </Text> */}
       <View style={{ flexDirection: "column", marginHorizontal: 20 }}>
         <View style={{ flexDirection: "row", height: 40 }}>
           <TextInput
