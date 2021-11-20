@@ -42,7 +42,7 @@ const ManageCoursePage: FC = () => {
     },
   ])
 
-  // useNavigation & useRoute //
+  // useNavigation
   const navigation = useNavigation()
 
   // useFocusEffect & useEffect //
@@ -80,12 +80,12 @@ const ManageCoursePage: FC = () => {
   }
 
   // other functions //
-  const redirectEditCourse = () => {
+  const redirectEditCourse = (courseId: string) => {
     // console.log("navigating to edit course page...")
     navigation.dispatch(
       CommonActions.navigate({
         name: "EditCourseInfo",
-        // params: { tutorUsername: username },
+        params: { courseId: courseId },
       })
     )
   }
@@ -103,7 +103,10 @@ const ManageCoursePage: FC = () => {
     <ScrollView style={styles.list}>
       {courseList.map((course, idx) => (
         <View key={idx} style={{ marginBottom: "3%" }}>
-          <CourseCard course={course} onClick={redirectEditCourse} />
+          <CourseCard
+            course={course}
+            onClick={() => redirectEditCourse(course.courseId)}
+          />
         </View>
       ))}
       <View style={{ marginTop: "10%" }}>

@@ -1,24 +1,14 @@
 import React, { FC, useState, useEffect } from "react"
-import {
-  ScrollView,
-  Text,
-  Image,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native"
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native"
 import { TextInput, Button, RadioButton, Provider } from "react-native-paper"
 import DropDown from "react-native-paper-dropdown"
 
 import { LearningType, Slot } from "../interfaces/courseInterface"
-import { AddCourseDto } from "../interfaces/dto"
+import { UpdateCourseDto } from "../interfaces/dto"
 
 interface EditCourseInfoProp {
-  courseInfo: AddCourseDto
-  setCourseInfo: React.Dispatch<React.SetStateAction<AddCourseDto>>
-  // onSave: () => void
-  // goBack: () => void
-  // deleteCourse: () => void
+  courseInfo: UpdateCourseDto
+  setCourseInfo: React.Dispatch<React.SetStateAction<UpdateCourseDto>>
 }
 
 type Day =
@@ -30,12 +20,19 @@ type Day =
   | "Saturday"
   | "Sunday"
 
+const dayList = [
+  { label: "MON", value: "Monday" },
+  { label: "TUE", value: "Tuesday" },
+  { label: "WED", value: "Wednesday" },
+  { label: "THU", value: "Thursday" },
+  { label: "FRI", value: "Friday" },
+  { label: "SAT", value: "Saturday" },
+  { label: "SUN", value: "Sunday" },
+]
+
 const EditCourseInfo: FC<EditCourseInfoProp> = ({
   courseInfo,
   setCourseInfo,
-  // onSave,
-  // goBack,
-  // deleteCourse,
 }) => {
   // States //
   const [lessonInput, setLessonInput] = useState<string>("")
@@ -45,16 +42,6 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
   const [endHour, setEndHour] = useState<number>(1)
   const [endMin, setEndMin] = useState<number>(0)
   const [showDropDown, setShowDropDown] = useState<boolean>(false)
-
-  const dayList = [
-    { label: "MON", value: "Monday" },
-    { label: "TUE", value: "Tuesday" },
-    { label: "WED", value: "Wednesday" },
-    { label: "THU", value: "Thursday" },
-    { label: "FRI", value: "Friday" },
-    { label: "SAT", value: "Saturday" },
-    { label: "SUN", value: "Sunday" },
-  ]
 
   // Other functions //
   const addSlot = () => {

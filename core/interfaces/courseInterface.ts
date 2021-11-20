@@ -41,10 +41,6 @@ export interface Review {
   comment: string
 }
 
-export interface Member {
-  memberName: string
-}
-
 export interface Enrollment {
   memberName: string
   time: string

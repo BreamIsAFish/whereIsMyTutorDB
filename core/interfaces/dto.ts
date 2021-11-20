@@ -69,3 +69,15 @@ export interface UpdateCourseDto {
   description: string,
   courseHour: number
 }
+
+export interface MemberDto {
+  firstName: string
+  lastName: string
+}
+
+export interface EnrollmentDto {
+  enrollmentId : string
+  studentUsername: string
+  firstName: string
+  lastName: string
+}

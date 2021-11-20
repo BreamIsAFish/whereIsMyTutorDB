@@ -1,4 +1,9 @@
-import { MinorCourseInfoDto, ReviewDto } from "../interfaces/dto"
+import {
+  EnrollmentDto,
+  MemberDto,
+  MinorCourseInfoDto,
+  ReviewDto,
+} from "../interfaces/dto"
 
 const link = "http://f150-2001-fb1-9c-a6a2-dc57-e723-4960-da1e.ngrok.io"
 
@@ -91,8 +96,10 @@ export const getReview = async (obj: {
   return x
 }
 
-export const getMember = async (obj: { courseId: string }) => {
-  var x = null
+export const getMember = async (obj: {
+  courseId: string
+}): Promise<MemberDto[]> => {
+  var x: MemberDto[] = []
   await fetch(`${link}/member?courseId=${obj.courseId}`)
     .then((response) => response.json())
     .then((data) => (x = data))
@@ -108,8 +115,10 @@ export const getStudentEnrollment = async (sUsername) => {
    return x
 };
 */
-export const getCourseEnrollment = async (obj: { courseId: string }) => {
-  var x = null
+export const getCourseEnrollment = async (obj: {
+  courseId: string
+}): Promise<EnrollmentDto[]> => {
+  var x: EnrollmentDto[] = []
   await fetch(`${link}/enrollment/course?courseId=${obj.courseId}`)
     .then((response) => response.json())
     .then((data) => (x = data))
