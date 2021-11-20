@@ -73,8 +73,8 @@ const EditCoursePage = () => {
   ])
 
   const [pageState, setPageState] = useState<
-    "EnrollmentSection" | "MemberSection" | "ImformationSection"
-  >("ImformationSection")
+    "Enrollment" | "Member" | "Information"
+  >("Information")
 
   const navigation = useNavigation()
 
@@ -104,45 +104,50 @@ const EditCoursePage = () => {
       <View style={styles.ChooseSection}>
         <TouchableOpacity
           style={{
-            backgroundColor: "#E9E8FC",
+            backgroundColor: pageState === "Information" ? "gray" : "white",
+            borderColor: "gray",
+            borderWidth: 2,
+            borderBottomLeftRadius: 15,
+            borderTopLeftRadius: 15,
+            paddingHorizontal: "7%",
+            paddingVertical: "2%",
+            // marginRight: "20%",
           }}
-          onPress={() => setPageState("ImformationSection")}
+          onPress={() => setPageState("Information")}
         >
-          <Text
-            style={{ color: "black", margin: "3%", paddingHorizontal: "2%" }}
-          >
-            Information
-          </Text>
+          <Text>Information</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{
-            backgroundColor: "#E9E8FC",
+            backgroundColor: pageState === "Member" ? "gray" : "white",
+            borderColor: "gray",
+            borderWidth: 2,
+            // borderBottomRightRadius: 15,
+            // borderTopRightRadius: 15,
+            paddingHorizontal: "7%",
+            paddingVertical: "2%",
           }}
-          onPress={() => setPageState("MemberSection")}
+          onPress={() => setPageState("Member")}
         >
-          <Text
-            style={{ color: "black", margin: "3%", paddingHorizontal: "2%" }}
-          >
-            Member
-          </Text>
+          <Text>Member</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{
-            backgroundColor: "#E9E8FC",
+            backgroundColor: pageState === "Enrollment" ? "gray" : "white",
+            borderColor: "gray",
+            borderWidth: 2,
+            borderBottomRightRadius: 15,
+            borderTopRightRadius: 15,
+            paddingHorizontal: "7%",
+            paddingVertical: "2%",
           }}
-          onPress={() => setPageState("EnrollmentSection")}
+          onPress={() => setPageState("Enrollment")}
         >
-          <Text
-            style={{ color: "black", margin: "3%", paddingHorizontal: "2%" }}
-          >
-            Enrollment
-          </Text>
+          <Text>Enrollment</Text>
         </TouchableOpacity>
       </View>
 
-      {pageState == "ImformationSection" ? (
+      {pageState == "Information" ? (
         <ScrollView>
           <EditCourseInfo
             courseInfo={courseInfo}
@@ -175,7 +180,7 @@ const EditCoursePage = () => {
         </ScrollView>
       ) : null}
 
-      {pageState == "MemberSection" ? (
+      {pageState == "Member" ? (
         <ScrollView style={styles.scrollSection}>
           {memberList.map((member, idx) => (
             <View key={idx} style={styles.card}>
@@ -185,7 +190,7 @@ const EditCoursePage = () => {
         </ScrollView>
       ) : null}
 
-      {pageState == "EnrollmentSection" ? (
+      {pageState == "Enrollment" ? (
         <ScrollView style={styles.scrollSection}>
           {enrollmentList.map((enrollment, idx) => (
             <View key={idx} style={styles.card}>
@@ -200,24 +205,26 @@ const EditCoursePage = () => {
 
 const styles = StyleSheet.create({
   page: {
-    paddingVertical: "10%",
+    // paddingVertical: "10%",
     height: "100%",
+    justifyContent: "center",
+    flexDirection: "column",
+    // backgroundColor: "gray"
   },
   scrollSection: {
-    marginTop: "5%",
+    // marginTop: "5%",
     paddingHorizontal: "5%",
   },
   card: {
     marginBottom: "3%",
   },
   ChooseSection: {
-    marginLeft: "5%",
-    marginRight: "5%",
-    marginBottom: "5%",
     flexDirection: "row",
-    borderColor: "gray",
-    borderWidth: 3,
-    borderRadius: 10,
+    justifyContent: "center",
+    padding: "3%",
+    width: "80%",
+    marginHorizontal: "10%",
+    // backgroundColor: "black",
   },
 })
 
