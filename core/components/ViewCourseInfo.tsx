@@ -1,17 +1,15 @@
 import React, { FC, useState } from "react"
 import { View, Text, ScrollView, Image } from "react-native"
 
-import { CourseInformations } from "../interfaces/courseInterface"
+import { CourseInfoDto } from "../interfaces/dto"
 
-const ViewCourseInfo: FC<{ courseInfo: CourseInformations }> = ({
-  courseInfo,
-}) => {
+const ViewCourseInfo: FC<{ courseInfo: CourseInfoDto }> = ({ courseInfo }) => {
   // const [courseInfo, setCourseInfo] = useState<CouseInformations>()
 
   const renderTimeSlot = () => (
     <ScrollView style={{ padding: "3%" }}>
-      {Object.keys(courseInfo.timeslots).map((day) => {
-        return courseInfo.timeslots[day].map((slot, idx) => (
+      {Object.keys(courseInfo.timeSlot).map((day) => {
+        return courseInfo.timeSlot[day].map((slot, idx) => (
           <Text key={day + idx}>{`${day} | ${slot.start} : ${slot.end}`}</Text>
         ))
       })}
@@ -21,20 +19,20 @@ const ViewCourseInfo: FC<{ courseInfo: CourseInformations }> = ({
   return (
     <View>
       <View style={{ marginBottom: "5%" }}>
-        {courseInfo.courseImage ? (
+        {/* {courseInfo.courseImage ? (
           <Image source={{}} />
-        ) : (
-          <Image source={require("../../assets/CourseImage.png")} />
-        )}
+        ) : ( */}
+        <Image source={require("../../assets/CourseImage.png")} />
+        {/* )} */}
       </View>
       <View>
         <Text>{`Course Name : ${courseInfo.courseName}`}</Text>
-        <Text>{`Subject : ${courseInfo.subjectName}`}</Text>
+        <Text>{`Subject : ${courseInfo.subject}`}</Text>
         <View style={{ flexDirection: "row" }}>
           <Text>Lesson : </Text>
-          {courseInfo.lessonList.map((lesson, idx) => (
+          {courseInfo.lesson.map((lesson, idx) => (
             <Text key={idx} style={{ marginRight: "2%" }}>
-              {courseInfo.subjectName}
+              {courseInfo.subject}
             </Text>
           ))}
         </View>

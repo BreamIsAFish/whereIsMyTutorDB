@@ -48,3 +48,24 @@ export interface SearchDto {
   sortType: "Date" | "Price", // “Date”, “Price”
   isAscending: boolean,
 }
+
+export interface ReviewDto {
+  Review_id: string // key
+  Cid: string
+  Content: string
+  Rating: number
+  Susername: string
+}
+
+export interface UpdateCourseDto {
+  courseId: string
+  courseName: string
+  subject: string
+  lesson: string[]
+  timeSlot: TimeSlots
+  price: number
+  capacity: number,
+  learningType: LearningType,
+  description: string,
+  courseHour: number
+}

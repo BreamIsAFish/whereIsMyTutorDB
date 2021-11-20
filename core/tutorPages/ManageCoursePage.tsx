@@ -35,7 +35,7 @@ const ManageCoursePage: FC = () => {
     },
   ])
 
-  // useNavigation //
+  // useNavigation & useRoute //
   const navigation = useNavigation()
 
   // other functions //

@@ -178,11 +178,12 @@ const SearchCoursePage = () => {
   }
 
   // Other functions //
-  const redirectCourseInfo = () => {
+  const redirectCourseInfo = (courseId: string) => {
     console.log("navigating to edit course page...")
     navigation.dispatch(
       CommonActions.navigate({
         name: "ViewCourseInfo",
+        params: { courseId: courseId },
       })
     )
   }
@@ -243,7 +244,10 @@ const SearchCoursePage = () => {
       <ScrollView style={styles.scrollSection}>
         {courseList.map((course, idx) => (
           <View key={idx} style={styles.card}>
-            <CourseCard course={course} onClick={redirectCourseInfo} />
+            <CourseCard
+              course={course}
+              onClick={() => redirectCourseInfo(course.courseId)}
+            />
           </View>
         ))}
       </ScrollView>

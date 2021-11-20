@@ -7,35 +7,40 @@ import {
   StyleSheet,
 } from "react-native"
 import { Button } from "react-native-paper"
+import { useRoute, RouteProp } from "@react-navigation/native"
 
 import ViewCourseInfo from "../components/ViewCourseInfo"
 import { CourseInformations, Review } from "../interfaces/courseInterface"
-import { getReview } from "../databases/MySQL"
-
+import { cancelEnrollment, enroll, getReview } from "../databases/MySQL"
 import ReviewCard from "../components/ReviewCard"
+import { loadUsername } from "../util/AsyncStorage"
+import { CourseInfoDto } from "../interfaces/dto"
+import { getCourseById } from "../databases/NoSQL"
 
 type Page = "Information" | "Review"
+type RegisterStatus = "NotEnroll" | "Waiting" | "Accepted"
 
 const CourseInfoPage: FC = () => {
   // states //
   const [page, setPage] = useState<Page>("Information")
-  const [courseInfo, setCourseInfo] = useState<CourseInformations>({
-    // courseImage?: string,
-    courseName: "Caluluay เรียนแล้วรวย",
-    subjectName: "Mathematics",
-    lessonList: ["Calculus", "Linear Algebra"],
-    timeslots: {
-      Monday: [
-        { start: "09:00", end: "10:00" },
-        { start: "13:00", end: "15:00" },
-      ],
-      Wednesday: [{ start: "06:00", end: "18:00" }],
-    },
-    price: 6969,
-    capacity: 69,
+  const [username, setUsername] = useState<string>("")
+  const [registerStatus, setRegisterStatus] =
+    useState<RegisterStatus>("NotEnroll")
+  const [courseInfo, setCourseInfo] = useState<CourseInfoDto>({
+    capacity: 0,
+    courseName: "",
+    courseHour: 0,
+    description: "",
+    imageURL: "",
     learningType: "Mixed",
-    description: "KUKUKUKUKUKUKUYYYYYYYYYY",
-    courseHour: 13,
+    lesson: [],
+    price: 0,
+    startDate: new Date(),
+    subject: "",
+    timeSlot: {},
+    courseId: "",
+    tutorUsername: "",
+    createDate: new Date(),
   })
   const [reviewList, setReviewList] = useState<Review[]>([
     {
@@ -50,41 +55,60 @@ const CourseInfoPage: FC = () => {
     }, // Just test example, can be delete
   ])
 
+  // useRoute //
+  const route: RouteProp<{ params: { courseId: string } }, "params"> =
+    useRoute()
+
   // useEffect //
-  // useEffect(() => {
-  //   (async () => {
-  //     await fetchInfo()
-  //   })()
-  // }, [])
+  useEffect(() => {
+    getStudentUsername()
+  }, [])
 
   useEffect(() => {
     ;(async () => {
-      if (page === "Review") {
-        await fetchReview()
-      } else {
-        // await fetchInfo()
-      }
+      if (page === "Review") await fetchReview()
+      else await fetchInfo()
     })()
   }, [page])
 
   // fetch //
-  // const fetchInfo = async () => {
-  //   await
-  // }
-
-  const fetchReview = async () => {
-    // const reviews = await getReview({courseId: courseInfo.courseId})
-    // setReviewList(reviews)
+  const getStudentUsername = async () => {
+    const usr = await loadUsername()
+    setUsername(usr[0])
   }
 
-  const sendRegister = () => {
-    console.log("Sending register...")
+  const fetchInfo = async () => {
+    const info = await getCourseById(route.params.courseId)
+    setCourseInfo(info)
+  }
+
+  const fetchReview = async () => {
+    const reviews = await getReview({ courseId: courseInfo.courseId })
+    setReviewList(
+      reviews.map((review) => ({
+        comment: review.Content,
+        rating: review.Rating,
+        reviwerName: review.Susername,
+      }))
+    )
   }
 
   // Other functions //
   const changePage = (page: Page) => {
-    // console.log(`showing ${page}`)
     setPage(page)
+  }
+
+  const handleButton = () => {
+    if (registerStatus === "NotEnroll") {
+      enroll({ studentUsername: username, courseId: courseInfo.courseId })
+      setRegisterStatus("Waiting")
+    } else if (registerStatus === "Waiting") {
+      cancelEnrollment({
+        studentUsername: username,
+        courseId: courseInfo.courseId,
+      })
+      setRegisterStatus("NotEnroll")
+    }
   }
 
   return (
@@ -129,10 +153,20 @@ const CourseInfoPage: FC = () => {
             <View>
               <Button
                 mode="contained"
-                color="dodgerblue"
-                onPress={sendRegister}
+                color={
+                  registerStatus === "NotEnroll"
+                    ? "dodgerblue"
+                    : registerStatus === "Waiting"
+                    ? "gold"
+                    : "gray"
+                }
+                onPress={handleButton}
               >
-                Register Coruse
+                {registerStatus === "NotEnroll"
+                  ? "Enroll Course"
+                  : registerStatus === "Waiting"
+                  ? "Cancel Enrollment"
+                  : "Enrollment Completed"}
               </Button>
             </View>
           </ScrollView>

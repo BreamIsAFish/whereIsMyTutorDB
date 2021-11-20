@@ -2,7 +2,12 @@ import React from "react"
 import { useState } from "react"
 
 import firebase from "./Firebase"
-import { AddCourseDto, CourseInfoDto, SearchDto } from "../interfaces/dto"
+import {
+  AddCourseDto,
+  CourseInfoDto,
+  SearchDto,
+  UpdateCourseDto,
+} from "../interfaces/dto"
 import { TimeSlots } from "../interfaces/courseInterface"
 
 const ref = firebase.firestore().collection("courses")
@@ -126,22 +131,29 @@ const findCourseDay = (timeSlot: TimeSlots) => {
     return "Weekend"
 }
 
-// function updateCourse(courseId, courseInfo) {
-//   const ncourse = {
-//     courseName: "Calculus III",
-//     subject: "Mathematics",
-//     lesson: ["A"],
-//     price: 20000,
-//     learningType: "Online",
-//     tutorUsername: "Jack",
-//     timeSlot: {
-//       Monday: [{ start: "09:00", end: "12:00" }],
-//       Sunday: [{ start: "09:00", end: "12:00" }],
-//     },
-//   }
-//   ref.doc(courseId).update(courseInfo)
-// }
+export const getCourseById = async (
+  courseId: string
+): Promise<CourseInfoDto> => {
+  const doc = await ref.doc(courseId).get()
+  return doc.data() as CourseInfoDto
+}
 
-// function deleteCourse(id) {
-//   ref.doc(id).delete()
-// }
+export const updateCourse = (courseId: string, courseInfo: UpdateCourseDto) => {
+  // const ncourse = {
+  //   courseName: "Calculus III",
+  //   subject: "Mathematics",
+  //   lesson: ["A"],
+  //   price: 20000,
+  //   learningType: "Online",
+  //   tutorUsername: "Jack",
+  //   timeSlot: {
+  //     Monday: [{ start: "09:00", end: "12:00" }],
+  //     Sunday: [{ start: "09:00", end: "12:00" }],
+  //   },
+  // }
+  ref.doc(courseId).update(courseInfo)
+}
+
+export const deleteCourse = (courseId: string) => {
+  ref.doc(courseId).delete()
+}
