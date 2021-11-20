@@ -1,3 +1,5 @@
+import { MinorCourseInfoDto } from "../interfaces/dto"
+
 const link = "http://f150-2001-fb1-9c-a6a2-dc57-e723-4960-da1e.ngrok.io"
 
 export const getTutor = async () => {
@@ -5,6 +7,7 @@ export const getTutor = async () => {
   await fetch(`${link}/tutor`)
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -13,20 +16,51 @@ export const getStudent = async () => {
   await fetch(`${link}/student`)
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
-export const getCourseInfo = async (obj: {
-  tutorUsername: string
-  courseId: string
-}) => {
+// export const getCourseInfo = async (obj: {
+//   tutorUsername: string
+//   courseId: string
+// }) => {
+//   var x: MinorCourseInfoDto = {
+//     courseId: "",
+//     displayName: "",
+//     numMember: 0,
+//     rating: 0,
+//   }
+//   // console.log("21", obj)
+//   await fetch(
+//     `${link}/course/info?tutorUsername=${obj.tutorUsername}&courseId=${obj.courseId}`
+//   )
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//     .catch(({ response }) => console.log(response))
+//   return x
+// }
+
+export const getCourseInfo = async (
+  l: {
+    tutorUsername: string
+    courseId: string
+  }[]
+) => {
   var x = null
-  console.log("21", obj)
+  var tList: string[] = []
+  var cList: string[] = []
+  l.forEach((e) => {
+    tList.push(e.tutorUsername)
+    cList.push(e.courseId)
+  })
+  var tutorUsername = tList.join(",")
+  var coursId = cList.join(",")
   await fetch(
-    `${link}/course/info?tutorUsername=${obj.tutorUsername}&courseId=${obj.courseId}`
+    `http://localhost:3001/course/info?tutorUsername=${tutorUsername}&courseId=${coursId}`
   )
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -40,6 +74,7 @@ export const getStudentStat = async (obj: {
   )
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   if (!x || (x as string[]).length == 0) return "NotEnroll"
   else if (x[0]["Verify_status"] == "Accept") return "Accepted"
   return "Waiting"
@@ -50,6 +85,7 @@ export const getReview = async (obj: { courseId: string }) => {
   await fetch(`${link}/review?courseId=${obj.courseId}`)
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -58,6 +94,7 @@ export const getMember = async (obj: { courseId: string }) => {
   await fetch(`${link}/member?courseId=${obj.courseId}`)
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 /*
@@ -74,6 +111,7 @@ export const getCourseEnrollment = async (obj: { courseId: string }) => {
   await fetch(`${link}/enrollment/course?courseId=${obj.courseId}`)
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -88,6 +126,7 @@ export const acceptEnrollment = async (obj: {
   )
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -96,6 +135,7 @@ export const deleteCourse = async (obj: { courseId: string }) => {
   await fetch(`${link}/course/delete?courseId=${obj.courseId}`)
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -109,6 +149,7 @@ export const enroll = async (obj: {
   )
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -123,6 +164,7 @@ export const cancelEnrollment = async (obj: {
   )
     .then((response) => response.json())
     .then((data) => (x = data))
+    .catch(({ response }) => console.log(response))
   return x
 }
 
@@ -142,53 +184,53 @@ export const isAlreadyEnroll = async (susername,cid) => {
 };
 */
 
-export const showUser = async () => {
-  var x = null
-  await fetch(`${link}/user/show`)
-    .then((response) => response.json())
-    .then((data) => (x = data))
-  return x
-}
+// export const showUser = async () => {
+//   var x = null
+//   await fetch(`${link}/user/show`)
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//   return x
+// }
 
-export const showEnroll = async () => {
-  var x = null
-  await fetch(`${link}/enroll/show`)
-    .then((response) => response.json())
-    .then((data) => (x = data))
-  return x
-}
-export const showEnrollment = async () => {
-  var x = null
-  await fetch(`${link}/enrollment/show`)
-    .then((response) => response.json())
-    .then((data) => (x = data))
-  return x
-}
-export const showReview = async () => {
-  var x = null
-  await fetch(`${link}/review/show`)
-    .then((response) => response.json())
-    .then((data) => (x = data))
-  return x
-}
-export const showMember = async () => {
-  var x = null
-  await fetch(`${link}/member/show`)
-    .then((response) => response.json())
-    .then((data) => (x = data))
-  return x
-}
-export const showTutor = async () => {
-  var x = null
-  await fetch(`${link}/tutor/show`)
-    .then((response) => response.json())
-    .then((data) => (x = data))
-  return x
-}
-export const showStudent = async () => {
-  var x = null
-  await fetch(`${link}/student/show`)
-    .then((response) => response.json())
-    .then((data) => (x = data))
-  return x
-}
+// export const showEnroll = async () => {
+//   var x = null
+//   await fetch(`${link}/enroll/show`)
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//   return x
+// }
+// export const showEnrollment = async () => {
+//   var x = null
+//   await fetch(`${link}/enrollment/show`)
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//   return x
+// }
+// export const showReview = async () => {
+//   var x = null
+//   await fetch(`${link}/review/show`)
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//   return x
+// }
+// export const showMember = async () => {
+//   var x = null
+//   await fetch(`${link}/member/show`)
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//   return x
+// }
+// export const showTutor = async () => {
+//   var x = null
+//   await fetch(`${link}/tutor/show`)
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//   return x
+// }
+// export const showStudent = async () => {
+//   var x = null
+//   await fetch(`${link}/student/show`)
+//     .then((response) => response.json())
+//     .then((data) => (x = data))
+//   return x
+// }

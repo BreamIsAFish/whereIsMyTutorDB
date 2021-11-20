@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useState, useEffect } from "react"
 import {
   View,
   ScrollView,
@@ -10,6 +10,7 @@ import { Button } from "react-native-paper"
 
 import ViewCourseInfo from "../components/ViewCourseInfo"
 import { CourseInformations, Review } from "../interfaces/courseInterface"
+import { getReview } from "../databases/MySQL"
 
 import ReviewCard from "../components/ReviewCard"
 
@@ -49,16 +50,41 @@ const CourseInfoPage: FC = () => {
     }, // Just test example, can be delete
   ])
 
-  // fetch //
-  // const fetchData = () => {}
+  // useEffect //
+  // useEffect(() => {
+  //   (async () => {
+  //     await fetchInfo()
+  //   })()
+  // }, [])
 
-  const changePage = (page: Page) => {
-    // console.log(`showing ${page}`)
-    setPage(page)
+  useEffect(() => {
+    ;(async () => {
+      if (page === "Review") {
+        await fetchReview()
+      } else {
+        // await fetchInfo()
+      }
+    })()
+  }, [page])
+
+  // fetch //
+  // const fetchInfo = async () => {
+  //   await
+  // }
+
+  const fetchReview = async () => {
+    // const reviews = await getReview({courseId: courseInfo.courseId})
+    // setReviewList(reviews)
   }
 
   const sendRegister = () => {
     console.log("Sending register...")
+  }
+
+  // Other functions //
+  const changePage = (page: Page) => {
+    // console.log(`showing ${page}`)
+    setPage(page)
   }
 
   return (

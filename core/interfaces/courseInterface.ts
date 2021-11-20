@@ -5,8 +5,10 @@ export interface Course {
   courseDay: string[]
   capacity: number
   maxCapacity: number
-  rating?: number
-  tutorName?: string
+  rating: number
+  tutorName: string
+  courseId: string
+  tutorUsername: string
 }
 
 export interface CourseInformations {
@@ -14,7 +16,7 @@ export interface CourseInformations {
   courseName: string
   subjectName: string
   lessonList: string[]
-  timeslots: {[day: string]: Slot[]}
+  timeslots: TimeSlots
   price: number
   capacity: number // max student
   learningType: LearningType
@@ -28,6 +30,10 @@ export interface Slot {
 }
 
 export type LearningType = "Offline" | "Online" | "Mixed"
+
+export type CourseDay = "Weekend"|"Weekday"|"Mixed"
+
+export type TimeSlots = {[day: string]: Slot[]}
 
 export interface Review {
   reviwerName: string

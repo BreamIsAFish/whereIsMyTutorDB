@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import {
   View,
   Text,
@@ -9,11 +9,18 @@ import {
   Alert,
   Pressable,
 } from "react-native"
-import { useNavigation, CommonActions } from "@react-navigation/native"
-import { RadioButton, Divider, List } from "react-native-paper"
+import {
+  useNavigation,
+  CommonActions,
+  useFocusEffect,
+} from "@react-navigation/native"
+import { RadioButton, Divider } from "react-native-paper"
 
 import CourseCard from "../components/CourseCard"
-import { Course } from "../interfaces/courseInterface"
+import { getCourseInfo } from "../databases/MySQL"
+import { searchCourse } from "../databases/NoSQL"
+import { Course, CourseDay, LearningType } from "../interfaces/courseInterface"
+import { MinorCourseInfoDto } from "../interfaces/dto"
 
 type PriceRate =
   | "All"
@@ -23,16 +30,23 @@ type PriceRate =
   | "2000 - 3000 Bath"
   | "3000++ Bath"
 
+type MinorCourseInfoList = { [courseId: string]: MinorCourseInfoDto }
+
 const SearchCoursePage = () => {
-  // const [courseName, setCourseName] = useState()
-  // const [subjectName, setSubjectName] = useState('Mathematics')
-  // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
-  // const [courseDay, setCourseDay] = useState(['Monday', 'Wednesday'])
-  // const [capacity, setCapacity] = useState(0)
-  // const [maxCapacity, setMaxCapacity] = useState(0)
-  // const [rating, setRating] = useState(0)
-  // const [tutorName, setTutorName] = useState('Dr. Kommuay')
+  // States //
   const [courseList, setCourseList] = useState<Course[]>([
+    // {
+    //   courseName: "Caluluay เรียนแล้วรวย",
+    //   subjectName: "Mathematics",
+    //   lessonList: ["Calculus", "Linear Algebra"],
+    //   courseDay: ["Monday", "Tuesday"],
+    //   capacity: 13,
+    //   maxCapacity: 69,
+    //   rating: 3.6,
+    //   tutorName: "Dr. Kommuay",
+    //   courseId: "001",
+    //   tutorUsername: "001",
+    // }, // Just test example, can be delete
     {
       courseName: "Caluluay เรียนแล้วรวย",
       subjectName: "Mathematics",
@@ -42,48 +56,116 @@ const SearchCoursePage = () => {
       maxCapacity: 69,
       rating: 3.6,
       tutorName: "Dr. Kommuay",
-    }, // Just test example, can be delete
-    {
-      courseName: "Caluluay เรียนแล้วรวย",
-      subjectName: "Mathematics",
-      lessonList: ["Calculus", "Linear Algebra"],
-      courseDay: ["Monday", "Tuesday"],
-      capacity: 13,
-      maxCapacity: 69,
-      rating: 3.6,
-      tutorName: "Dr. Kommuay",
+      courseId: "002",
+      tutorUsername: "002",
     }, // Just test example, can be delete
   ])
+  const [minorInfoList, setMinorInfoList] = useState<MinorCourseInfoList>({
+    // "000": {
+    //   courseId: "000",
+    //   displayName: "",
+    //   numMember: 0,
+    //   rating: 0,
+    // },
+  })
 
-  // const [subjectList, setSubjectList] = useState<string[]>([
-  //   "All",
-  //   "Mathematic",
-  //   "Science",
-  //   "History",
-  //   "Sociology",
-  //   "Biology",
-  //   "Chemistry",
-  //   "Physic",
-  // ])
+  // Search States //
   const [search, setSearch] = useState<string>("")
-  const [filterVisible, setFilterVisible] = useState<boolean>(false)
-  const [priceRate, setPriceRate] = useState<PriceRate>("All")
+  const [subject, setSubject] = useState<string>("")
   const [min, setMin] = useState<number>(0)
   const [max, setMax] = useState<number>(-1)
-  const [courseDay, setCourseDay] = useState<"Mixed" | "Weekend" | "Weekday">(
-    "Mixed"
-  )
-  const [learningType, setLearningType] = useState<
-    "Mixed" | "Online" | "Offline"
-  >("Mixed")
-  const [subject, setSubject] = useState<string>("")
+  const [courseDay, setCourseDay] = useState<CourseDay>("Mixed")
+  const [learningType, setLearningType] = useState<LearningType>("Mixed")
   const [sortType, setSortType] = useState<"Price" | "Date">("Price")
   const [isAscending, setIsAscending] = useState<boolean>(true)
+  const [priceRate, setPriceRate] = useState<PriceRate>("All")
+  const [filterVisible, setFilterVisible] = useState<boolean>(false)
 
   // useNavigation //
   const navigation = useNavigation()
 
-  // other functions //
+  // useFocusEffect & useEffect //
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Fetching Courses")
+      fetchCourseList()
+    }, [])
+  )
+  // useEffect(() => {
+  //   console.log("Fetching Courses")
+  //   fetchCourseList()
+  // }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      // console.log(courseList)
+      // await fetchCourseMinorInfo()
+    })()
+  }, [courseList])
+
+  // useEffect(() => {
+  //   setCourseList(
+  //     courseList.map((course) => ({
+  //       ...course,
+  //       tutorName: minorInfoList[course.courseId]
+  //         ? minorInfoList[course.courseId].displayName
+  //         : "",
+  //       capacity: minorInfoList[course.courseId]
+  //         ? minorInfoList[course.courseId].numMember
+  //         : -1,
+  //       rating: minorInfoList[course.courseId]
+  //         ? minorInfoList[course.courseId].rating
+  //         : -1,
+  //     }))
+  //   )
+  // }, [minorInfoList])
+
+  // Fetch data //
+  const fetchCourseList = async () => {
+    const courses = await searchCourse({
+      search,
+      subject,
+      min,
+      max,
+      courseDay,
+      learningType,
+      sortType,
+      isAscending,
+    })
+    console.log(courses)
+    if (courses) {
+      setCourseList(
+        courses.map((course) => ({
+          courseName: course.courseName,
+          subjectName: course.subject,
+          lessonList: course.lesson,
+          courseDay: Object.keys(course.timeSlot),
+          maxCapacity: course.capacity,
+          capacity: 0,
+          rating: 0,
+          tutorName: "",
+          courseId: course.courseId,
+          tutorUsername: course.tutorUsername,
+        }))
+      )
+    }
+  }
+
+  // const fetchCourseMinorInfo = async () => {
+  //   let list: MinorCourseInfoList = {}
+  //   if (courseList) {
+  //     for (const course of courseList) {
+  //       const minorInfo = await getCourseInfo({
+  //         tutorUsername: course.tutorUsername,
+  //         courseId: course.courseId,
+  //       })
+  //       list[minorInfo.courseId] = minorInfo
+  //     }
+  //     setMinorInfoList(list)
+  //   }
+  // }
+
+  // Other functions //
   const redirectCourseInfo = () => {
     console.log("navigating to edit course page...")
     navigation.dispatch(

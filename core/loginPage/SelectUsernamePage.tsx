@@ -36,7 +36,7 @@ const SelectUsernamePage = () => {
 
   useEffect(() => {
     ;(async () => {
-      if (studentUsernameList && tutorUsernameList) {
+      if (studentUsernameList[0] && tutorUsernameList[0]) {
         setActiveStudentUsername(studentUsernameList[0].studentUsername)
         setActiveTutorUsername(tutorUsernameList[0].tutorUsername)
       }

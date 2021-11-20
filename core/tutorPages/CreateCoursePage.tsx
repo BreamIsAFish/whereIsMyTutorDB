@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react"
 import { View, StyleSheet } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import { Button } from "react-native-paper"
 
 import EditCourseInfo from "../components/EditCourseInfo"
@@ -27,17 +28,21 @@ const CreateCoursePage: FC = () => {
 
   return (
     <View style={styles.page}>
-      <EditCourseInfo courseInfo={courseInfo} setCourseInfo={setCourseInfo} />
-      <Button mode="contained" color="dodgerblue" onPress={createCourse}>
-        Create Course
-      </Button>
+      <ScrollView>
+        <EditCourseInfo courseInfo={courseInfo} setCourseInfo={setCourseInfo} />
+        <View style={{ paddingHorizontal: "5%" }}>
+          <Button mode="contained" color="dodgerblue" onPress={createCourse}>
+            Create Course
+          </Button>
+        </View>
+      </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: "10%",
+    paddingVertical: "10%",
     height: "100%",
   },
 })

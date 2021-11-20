@@ -16,6 +16,10 @@ const ManageCoursePage: FC = () => {
       courseDay: ["Monday", "Tuesday"],
       capacity: 13,
       maxCapacity: 69,
+      courseId: "001",
+      tutorUsername: "001",
+      rating: 0,
+      tutorName: "",
     },
     {
       courseName: "Caluluay2 เรียนแล้วจน",
@@ -24,6 +28,10 @@ const ManageCoursePage: FC = () => {
       courseDay: ["Monday", "Tuesday"],
       capacity: 16,
       maxCapacity: 69,
+      courseId: "002",
+      tutorUsername: "002",
+      rating: 0,
+      tutorName: "",
     },
   ])
 
