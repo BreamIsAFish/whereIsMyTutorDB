@@ -15,13 +15,17 @@ import EditCourseInfo from "../components/EditCourseInfo"
 import { EnrollmentDto, MemberDto, UpdateCourseDto } from "../interfaces/dto"
 import { deleteCourse, getCourseById, updateCourse } from "../databases/NoSQL"
 import { loadUsername } from "../util/AsyncStorage"
-import { getCourseEnrollment, getMember } from "../databases/MySQL"
+import {
+  deleteCourseSQL,
+  getCourseEnrollment,
+  getMember,
+} from "../databases/MySQL"
 
 type PageState = "Enrollment" | "Member" | "Information"
 
 const EditCoursePage = () => {
   // states //
-  const [username, setUsername] = useState<string>()
+  // const [username, setUsername] = useState<string>()
   const [courseInfo, setCourseInfo] = useState<UpdateCourseDto>({
     courseName: "",
     subject: "",
@@ -64,17 +68,17 @@ const EditCoursePage = () => {
   // useEffect //
   useEffect(() => {
     ;(async () => {
-      await getTutorUsername()
+      // await getTutorUsername()
       await getCourseInfo()
       console.log(route.params.courseId)
     })()
   }, [])
 
   // Fetch data //
-  const getTutorUsername = async () => {
-    const usr = await loadUsername()
-    setUsername(usr[1])
-  }
+  // const getTutorUsername = async () => {
+  //   const usr = await loadUsername()
+  //   setUsername(usr[1])
+  // }
 
   const getCourseInfo = async () => {
     const info = await getCourseById(route.params.courseId)
@@ -106,15 +110,16 @@ const EditCoursePage = () => {
   }
 
   const handleChangePage = async (nextPage: PageState) => {
+    setPageState(nextPage)
     if (nextPage === "Information") await getCourseInfo()
     else if (nextPage === "Member") await getCourseMember()
     else await getEnrollment()
-    setPageState(nextPage)
   }
 
   const handleDelete = () => {
     console.log("Deleting the course...")
     deleteCourse(route.params.courseId)
+    deleteCourseSQL({ courseId: route.params.courseId })
     navigation.goBack()
   }
 

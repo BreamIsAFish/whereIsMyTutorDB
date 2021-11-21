@@ -41,21 +41,25 @@ export const addCourse = async (courseInfo: AddCourseDto) => {
 export const searchCourse = async (
   config: SearchDto
 ): Promise<CourseInfoDto[]> => {
-  // console.log(config.search);
   const courses: CourseInfoDto[] = await getCourse()
   // const order = config.isAscending ? "asc" : "desc"
   const result = courses.filter((course) => {
     return (
-      (course.courseName.toLowerCase().includes(config.search) ||
-        course.lesson.find((e) => e.toLowerCase().includes(config.search)) ||
-        course.tutorUsername.toLowerCase().includes(config.search)) &&
+      (course.courseName.toLowerCase().includes(config.search.toLowerCase()) ||
+        course.lesson.find((e) =>
+          e.toLowerCase().includes(config.search.toLowerCase())
+        ) ||
+        course.tutorUsername
+          .toLowerCase()
+          .includes(config.search.toLowerCase())) &&
       course.price >= config.min &&
-      course.price <= (config.max == -1 ? Infinity : config.max) &&
-      course.subject == config.subject &&
-      course.learningType == config.learningType &&
-      findCourseDay(course.timeSlot) == config.courseDay
+      course.price <= (config.max === -1 ? Infinity : config.max) &&
+      (config.subject === "" ? true : course.subject === config.subject) &&
+      course.learningType === config.learningType &&
+      findCourseDay(course.timeSlot) === config.courseDay
     )
   })
+  // console.log(result)
   result.sort((a, b) => {
     const type = config.sortType
     const isAscending = config.isAscending

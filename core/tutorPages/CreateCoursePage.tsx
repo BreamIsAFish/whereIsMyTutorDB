@@ -7,13 +7,13 @@ import { useNavigation } from "@react-navigation/native"
 import EditCourseInfo from "../components/EditCourseInfo"
 import { addCourse } from "../databases/NoSQL"
 // import { CourseInformations } from "../interfaces/courseInterface"
-import { AddCourseDto } from "../interfaces/dto"
+import { AddCourseDto, UpdateCourseDto } from "../interfaces/dto"
 import { loadUsername } from "../util/AsyncStorage"
 
 const CreateCoursePage: FC = () => {
   // States //
-  // const [username, setUsername] = useState<string>("")
-  const [courseInfo, setCourseInfo] = useState<AddCourseDto>({
+  const [username, setUsername] = useState<string>("")
+  const [courseInfo, setCourseInfo] = useState<UpdateCourseDto>({
     courseName: "",
     subject: "",
     lesson: [],
@@ -23,8 +23,7 @@ const CreateCoursePage: FC = () => {
     learningType: "Mixed",
     description: "",
     courseHour: 0,
-    tutorUsername: "",
-    createDate: new Date(),
+    courseId: "",
   })
 
   // useNavigation //
@@ -38,13 +37,17 @@ const CreateCoursePage: FC = () => {
   // Fetch data //
   const getTutorUsername = async () => {
     const usr = await loadUsername()
-    setCourseInfo({ ...courseInfo, tutorUsername: usr[1] })
+    setUsername(usr[1])
   }
 
   // Other functions //
   const createCourse = () => {
     console.log("Sending course req to backend...")
-    addCourse(courseInfo)
+    addCourse({
+      ...courseInfo,
+      createDate: new Date(),
+      tutorUsername: username,
+    })
     navigation.goBack()
   }
 

@@ -11,7 +11,12 @@ import { useRoute, RouteProp } from "@react-navigation/native"
 
 import ViewCourseInfo from "../components/ViewCourseInfo"
 import { CourseInformations, Review } from "../interfaces/courseInterface"
-import { cancelEnrollment, enroll, getReview } from "../databases/MySQL"
+import {
+  cancelEnrollment,
+  enroll,
+  getReview,
+  getStudentStat,
+} from "../databases/MySQL"
 import ReviewCard from "../components/ReviewCard"
 import { loadUsername } from "../util/AsyncStorage"
 import { CourseInfoDto } from "../interfaces/dto"
@@ -22,8 +27,11 @@ type RegisterStatus = "NotEnroll" | "Waiting" | "Accepted"
 
 const CourseInfoPage: FC = () => {
   // states //
-  const [page, setPage] = useState<Page>("Information")
   const [username, setUsername] = useState<string>("")
+
+  const [page, setPage] = useState<Page>("Information")
+  const [gotInfo, setGotInfo] = useState<boolean>(false)
+  const [gotUserename, setGotUsername] = useState<boolean>(false)
   const [registerStatus, setRegisterStatus] =
     useState<RegisterStatus>("NotEnroll")
   const [courseInfo, setCourseInfo] = useState<CourseInfoDto>({
@@ -61,8 +69,17 @@ const CourseInfoPage: FC = () => {
 
   // useEffect //
   useEffect(() => {
-    getStudentUsername()
+    ;(async () => {
+      await getStudentUsername()
+      await fetchInfo()
+    })()
   }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      if (gotUserename && gotInfo) await getStudentStatus()
+    })()
+  }, [gotUserename, gotInfo])
 
   useEffect(() => {
     ;(async () => {
@@ -75,14 +92,26 @@ const CourseInfoPage: FC = () => {
   const getStudentUsername = async () => {
     const usr = await loadUsername()
     setUsername(usr[0])
+    setGotUsername(true)
+  }
+
+  const getStudentStatus = async () => {
+    const status = await getStudentStat({
+      studentUsername: username,
+      courseId: courseInfo.courseId,
+    })
+    setRegisterStatus(status)
   }
 
   const fetchInfo = async () => {
+    console.log("fetching info...")
     const info = await getCourseById(route.params.courseId)
     setCourseInfo(info)
+    setGotInfo(true)
   }
 
   const fetchReview = async () => {
+    console.log("fetching reviews...")
     const reviews = await getReview({ courseId: courseInfo.courseId })
     setReviewList(
       reviews.map((review) => ({

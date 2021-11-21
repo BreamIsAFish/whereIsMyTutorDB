@@ -14,6 +14,8 @@ import { getCourseByTutor } from "../databases/NoSQL"
 
 const ManageCoursePage: FC = () => {
   // states //
+  const [usernameReady, setUsernameReady] = useState<boolean>(false)
+
   const [username, setUsername] = useState<string>("")
   const [courseList, setCourseList] = useState<Course[]>([
     {
@@ -28,18 +30,6 @@ const ManageCoursePage: FC = () => {
       tutorName: "",
       rating: 0,
     },
-    {
-      courseName: "Caluluay2 เรียนแล้วจน",
-      subjectName: "Mathematics",
-      lessonList: ["Calculus", "Linear Algebra"],
-      // courseDay: ["Monday", "Tuesday"],
-      capacity: 16,
-      maxCapacity: 69,
-      courseId: "002",
-      tutorUsername: "002",
-      tutorName: "",
-      rating: 0,
-    },
   ])
 
   // useNavigation
@@ -50,10 +40,15 @@ const ManageCoursePage: FC = () => {
     useCallback(() => {
       ;(async () => {
         await getTutorUsername()
-        await getAllCourses()
       })()
     }, [])
   )
+
+  // useEffect(() => {
+  //   ;(async () => {
+  //     if(usernameReady) await getAllCourses()
+  //   })()
+  // }, [usernameReady])
 
   useEffect(() => {
     ;(async () => {

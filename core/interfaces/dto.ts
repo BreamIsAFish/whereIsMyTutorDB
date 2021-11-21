@@ -15,7 +15,7 @@ export interface AddCourseDto {
   timeSlot: {[day: string]: Slot[]}
   price: number
   capacity: number
-  learningType: string
+  learningType: LearningType
   description: string
   courseHour: number
 	createDate: Date
@@ -82,3 +82,5 @@ export interface EnrollmentDto {
   firstName: string
   lastName: string
 }
+
+export type StudentEnrollStatus = "NotEnroll" | "Waiting" | "Accepted"

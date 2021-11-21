@@ -35,18 +35,6 @@ type MinorCourseInfoList = { [courseId: string]: MinorCourseInfoDto }
 const SearchCoursePage = () => {
   // States //
   const [courseList, setCourseList] = useState<Course[]>([
-    // {
-    //   courseName: "Caluluay เรียนแล้วรวย",
-    //   subjectName: "Mathematics",
-    //   lessonList: ["Calculus", "Linear Algebra"],
-    //   courseDay: ["Monday", "Tuesday"],
-    //   capacity: 13,
-    //   maxCapacity: 69,
-    //   rating: 3.6,
-    //   tutorName: "Dr. Kommuay",
-    //   courseId: "001",
-    //   tutorUsername: "001",
-    // }, // Just test example, can be delete
     {
       courseName: "Caluluay เรียนแล้วรวย",
       subjectName: "Mathematics",
@@ -81,6 +69,8 @@ const SearchCoursePage = () => {
   const [priceRate, setPriceRate] = useState<PriceRate>("All")
   const [filterVisible, setFilterVisible] = useState<boolean>(false)
 
+  const [refresh, setRefresh] = useState<boolean>(false)
+
   // useNavigation //
   const navigation = useNavigation()
 
@@ -90,7 +80,6 @@ const SearchCoursePage = () => {
       ;(async () => {
         console.log("Fetching Courses")
         await fetchCourseList()
-        await fetchCourseMinorInfo()
       })()
     }, [])
   )
@@ -99,12 +88,31 @@ const SearchCoursePage = () => {
   //   fetchCourseList()
   // }, [])
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     console.log(courseList)
-  //     await fetchCourseMinorInfo()
-  //   })()
-  // }, [courseList])
+  useEffect(() => {
+    ;(async () => {
+      console.log("Fetching Courses")
+      await fetchCourseList()
+    })()
+  }, [
+    search,
+    subject,
+    min,
+    max,
+    courseDay,
+    learningType,
+    sortType,
+    isAscending,
+  ])
+
+  useEffect(() => {
+    ;(async () => {
+      if (refresh) {
+        // console.log(courseList)
+        setRefresh(false)
+        await fetchCourseMinorInfo()
+      }
+    })()
+  }, [courseList])
 
   useEffect(() => {
     setCourseList(
@@ -125,6 +133,16 @@ const SearchCoursePage = () => {
 
   // Fetch data //
   const fetchCourseList = async () => {
+    // console.log({
+    //   search,
+    //   subject,
+    //   min,
+    //   max,
+    //   courseDay,
+    //   learningType,
+    //   sortType,
+    //   isAscending,
+    // })
     const courses = await searchCourse({
       search,
       subject,
@@ -135,8 +153,9 @@ const SearchCoursePage = () => {
       sortType,
       isAscending,
     })
-    console.log(courses)
+    // console.log("got", courses)
     if (courses) {
+      setRefresh(true)
       setCourseList(
         courses.map((course) => ({
           courseName: course.courseName,
@@ -158,12 +177,10 @@ const SearchCoursePage = () => {
     let list: MinorCourseInfoList = {}
     if (courseList) {
       const minorInfo = await getCourseInfo(
-        courseList.map((course) => {
-          return {
-            tutorUsername: course.tutorUsername,
-            courseId: course.courseId,
-          }
-        })
+        courseList.map((course) => ({
+          tutorUsername: course.tutorUsername,
+          courseId: course.courseId,
+        }))
       )
       for (const info of minorInfo) {
         list[info.courseId] = info
@@ -294,10 +311,8 @@ const SearchCoursePage = () => {
                         priceRate === "0 - 500 Bath" ? "checked" : "unchecked"
                       }
                       onPress={() => {
-                        setPriceRate("0 - 500 Bath"),
-                          setMin(0),
-                          setMax(500),
-                          console.log("set min:", { min }, ", max:", { max })
+                        setPriceRate("0 - 500 Bath"), setMin(0), setMax(500)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>0 - 500 Bath</Text>
@@ -319,8 +334,8 @@ const SearchCoursePage = () => {
                       onPress={() => {
                         setPriceRate("500 - 1000 Bath"),
                           setMin(500),
-                          setMax(1000),
-                          console.log("set min:", { min }, ", max:", { max })
+                          setMax(1000)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>500 - 1000 Bath</Text>
@@ -344,8 +359,8 @@ const SearchCoursePage = () => {
                       onPress={() => {
                         setPriceRate("1000 - 2000 Bath"),
                           setMin(1000),
-                          setMax(2000),
-                          console.log("set min:", { min }, ", max:", { max })
+                          setMax(2000)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>1000 - 2000 Bath</Text>
@@ -367,8 +382,8 @@ const SearchCoursePage = () => {
                       onPress={() => {
                         setPriceRate("2000 - 3000 Bath"),
                           setMin(2000),
-                          setMax(3000),
-                          console.log("set min:", { min }, ", max:", { max })
+                          setMax(3000)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>2000 - 3000 Bath</Text>
@@ -388,10 +403,8 @@ const SearchCoursePage = () => {
                         priceRate === "3000++ Bath" ? "checked" : "unchecked"
                       }
                       onPress={() => {
-                        setPriceRate("3000++ Bath"),
-                          setMin(3000),
-                          setMax(1000000),
-                          console.log("set min:", { min }, ", max:", { max })
+                        setPriceRate("3000++ Bath"), setMin(3000), setMax(-1)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>3000++ Bath</Text>
@@ -407,10 +420,8 @@ const SearchCoursePage = () => {
                       value="value"
                       status={priceRate === "All" ? "checked" : "unchecked"}
                       onPress={() => {
-                        setPriceRate("All"),
-                          setMin(0),
-                          setMax(-1),
-                          console.log("set min:", { min }, ", max:", { max })
+                        setPriceRate("All"), setMin(0), setMax(-1)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>All</Text>
@@ -537,8 +548,8 @@ const SearchCoursePage = () => {
                       setSubject(""),
                       setMin(0),
                       setMax(-1),
-                      setLearningType("Mixed"),
-                      console.log("set min:", { min }, ", max:", { max })
+                      setLearningType("Mixed")
+                    // console.log("set min:", { min }, ", max:", { max })
                   }}
                 >
                   <Text style={styles.textStyle}>Clear</Text>

@@ -3,6 +3,7 @@ import {
   MemberDto,
   MinorCourseInfoDto,
   ReviewDto,
+  StudentEnrollStatus,
 } from "../interfaces/dto"
 
 const link = "https://bff3-2001-fb1-9f-abca-bcf3-5df2-682d-fe72.ngrok.io"
@@ -60,8 +61,10 @@ export const getCourseInfo = async (
   })
   var tutorUsername = tList.join(",")
   var coursId = cList.join(",")
+  // console.log(tutorUsername)
+  // console.log(coursId)
   await fetch(
-    `http://localhost:3001/course/info?tutorUsername=${tutorUsername}&courseId=${coursId}`
+    `${link}/course/info?tutorUsername=${tutorUsername}&courseId=${coursId}`
   )
     .then((response) => response.json())
     .then((data) => (x = data))
@@ -72,7 +75,7 @@ export const getCourseInfo = async (
 export const getStudentStat = async (obj: {
   studentUsername: string
   courseId: string
-}) => {
+}): Promise<StudentEnrollStatus> => {
   var x = null
   await fetch(
     `${link}/student/status?studentUsername=${obj.studentUsername}&courseId=${obj.courseId}`
@@ -141,7 +144,7 @@ export const acceptEnrollment = async (obj: {
   return x
 }
 
-export const deleteCourse = async (obj: { courseId: string }) => {
+export const deleteCourseSQL = async (obj: { courseId: string }) => {
   var x = null
   await fetch(`${link}/course/delete?courseId=${obj.courseId}`)
     .then((response) => response.json())
@@ -154,6 +157,7 @@ export const enroll = async (obj: {
   studentUsername: string
   courseId: string
 }) => {
+  // console.log(obj)
   var x = null
   await fetch(
     `${link}/enrollment/enroll?studentUsername=${obj.studentUsername}&courseId=${obj.courseId}`
@@ -161,6 +165,7 @@ export const enroll = async (obj: {
     .then((response) => response.json())
     .then((data) => (x = data))
     .catch(({ response }) => console.log(response))
+  // console.log(x)
   return x
 }
 

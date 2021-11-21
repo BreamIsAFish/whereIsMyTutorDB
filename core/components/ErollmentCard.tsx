@@ -21,12 +21,12 @@ const EnrollmentCard: FC<EnrollmentCardProp> = ({ enrollment, update }) => {
   return (
     <View style={styles.card}>
       <Image
-        source={require("../../assets/CourseImage.png")}
+        source={require("../../assets/icons/Person.png")}
         // resizeMode="contain"
         style={{
-          height: "100%",
-          width: "20%",
-          marginRight: "3%",
+          height: 25,
+          width: 25,
+          margin: "3%",
         }}
       />
       <View style={{ marginVertical: "2%" }}>
@@ -35,41 +35,30 @@ const EnrollmentCard: FC<EnrollmentCardProp> = ({ enrollment, update }) => {
 
       <View
         style={{
-          margin: "2%",
-          height: "70%",
+          flex: 1,
+          justifyContent: "flex-end",
+          alignItems: "center",
           flexDirection: "row",
-          backgroundColor: "red",
+          paddingRight: "5%",
         }}
       >
-        <Text style={{ color: "white" }}> Reject </Text>
+        <TouchableOpacity
+          style={{ marginHorizontal: "10%" }}
+          onPress={handleAccept}
+        >
+          <Image
+            source={require("../../assets/icons/CheckMark.png")}
+            // resizeMode="contain"
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleReject}>
+          <Image
+            source={require("../../assets/icons/CrossMark.png")}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
       </View>
-
-      <View
-        style={{
-          margin: "2%",
-          height: "70%",
-          flexDirection: "row",
-          backgroundColor: "green",
-        }}
-      >
-        <Text style={{ color: "white" }}> Accept </Text>
-      </View>
-      <TouchableOpacity
-        style={{ marginHorizontal: "5%" }}
-        onPress={handleAccept}
-      >
-        <Image
-          source={require("../../assets/icons/CheckMark.png")}
-          // resizeMode="contain"
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleReject}>
-        <Image
-          source={require("../../assets/icons/CrossMark.png")}
-          style={styles.icon}
-        />
-      </TouchableOpacity>
     </View>
   )
 }
@@ -80,10 +69,11 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 3,
     borderRadius: 10,
+    alignItems: "center",
   },
   icon: {
-    height: "10%",
-    width: "10%",
+    height: 20,
+    width: 20,
   },
 })
 
