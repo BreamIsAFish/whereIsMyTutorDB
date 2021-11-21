@@ -1,39 +1,24 @@
 import React, { useState, FC } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native"
 
-import { Member } from "../interfaces/courseInterface"
+import { MemberDto } from "../interfaces/dto"
 
-const MemberCard: FC<{ member: Member }> = ({ member }) => {
-  // const [courseName, setCourseName] = useState('Calculuay เรียนแล้วรวย')
-  // const [subjectName, setSubjectName] = useState('Mathematics')
-  // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
-  // const [courseDay, setCourseDay] = useState(['Monday', 'Wednesday'])
-  // const [capacity, setCapacity] = useState(0)
-  // const [maxCapacity, setMaxCapacity] = useState(0)
-  // const [rating, setRating] = useState(0)
-  // const [tutorName, setTutorName] = useState('Dr. Kommuay')
-
-  const onClick = () => {
-    console.log("Beam Ju Leck")
-  }
-
+const MemberCard: FC<{ member: MemberDto }> = ({ member }) => {
   return (
-    <TouchableOpacity onPress={onClick}>
-      <View style={styles.card}>
-        <Image
-          source={require("../../assets/CourseImage.png")}
-          // resizeMode="contain"
-          style={{
-            height: "100%",
-            width: "20%",
-            marginRight: "3%",
-          }}
-        />
-        <View style={{ marginVertical: "2%" }}>
-          <Text>{member.memberName}</Text>
-        </View>
+    <View style={styles.card}>
+      <Image
+        source={require("../../assets/icons/Person.png")}
+        // resizeMode="contain"
+        style={{
+          height: 25,
+          width: 25,
+          margin: "3%",
+        }}
+      />
+      <View style={{ marginVertical: "2%" }}>
+        <Text>{`${member.firstName} ${member.firstName}`}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
   )
 }
 
@@ -43,6 +28,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 3,
     borderRadius: 10,
+    alignItems: "center",
   },
 })
 

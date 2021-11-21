@@ -1,27 +1,14 @@
 import React, { FC, useState, useEffect } from "react"
-import {
-  ScrollView,
-  Text,
-  Image,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native"
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native"
 import { TextInput, Button, RadioButton, Provider } from "react-native-paper"
 import DropDown from "react-native-paper-dropdown"
 
-import {
-  CourseInformations,
-  LearningType,
-  Slot,
-} from "../interfaces/courseInterface"
+import { LearningType, Slot } from "../interfaces/courseInterface"
+import { UpdateCourseDto } from "../interfaces/dto"
 
 interface EditCourseInfoProp {
-  courseInfo: CourseInformations
-  setCourseInfo: React.Dispatch<React.SetStateAction<CourseInformations>>
-  // onSave: () => void
-  // goBack: () => void
-  // deleteCourse: () => void
+  courseInfo: UpdateCourseDto
+  setCourseInfo: React.Dispatch<React.SetStateAction<UpdateCourseDto>>
 }
 
 type Day =
@@ -33,12 +20,19 @@ type Day =
   | "Saturday"
   | "Sunday"
 
+const dayList = [
+  { label: "MON", value: "Monday" },
+  { label: "TUE", value: "Tuesday" },
+  { label: "WED", value: "Wednesday" },
+  { label: "THU", value: "Thursday" },
+  { label: "FRI", value: "Friday" },
+  { label: "SAT", value: "Saturday" },
+  { label: "SUN", value: "Sunday" },
+]
+
 const EditCourseInfo: FC<EditCourseInfoProp> = ({
   courseInfo,
   setCourseInfo,
-  // onSave,
-  // goBack,
-  // deleteCourse,
 }) => {
   // States //
   const [lessonInput, setLessonInput] = useState<string>("")
@@ -49,16 +43,6 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
   const [endMin, setEndMin] = useState<number>(0)
   const [showDropDown, setShowDropDown] = useState<boolean>(false)
 
-  const dayList = [
-    { label: "MON", value: "Monday" },
-    { label: "TUE", value: "Tuesday" },
-    { label: "WED", value: "Wednesday" },
-    { label: "THU", value: "Thursday" },
-    { label: "FRI", value: "Friday" },
-    { label: "SAT", value: "Saturday" },
-    { label: "SUN", value: "Sunday" },
-  ]
-
   // Other functions //
   const addSlot = () => {
     const start =
@@ -67,20 +51,20 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
       `${endHour}`.padStart(2, "0") + `:` + `${endMin}`.padStart(2, "0")
     const newSlot = { start, end }
     const newTimeSlot = {
-      ...courseInfo.timeslots,
-      [selectDay]: courseInfo.timeslots[selectDay]
-        ? [...courseInfo.timeslots[selectDay], newSlot]
+      ...courseInfo.timeSlot,
+      [selectDay]: courseInfo.timeSlot[selectDay]
+        ? [...courseInfo.timeSlot[selectDay], newSlot]
         : [newSlot],
     }
-    setCourseInfo({ ...courseInfo, timeslots: newTimeSlot })
+    setCourseInfo({ ...courseInfo, timeSlot: newTimeSlot })
   }
 
   const removeSlot = (day: string, delSlot: Slot) => {
     const newTimeSlot = {
-      ...courseInfo.timeslots,
-      [day]: courseInfo.timeslots[day].filter((slot) => slot !== delSlot),
+      ...courseInfo.timeSlot,
+      [day]: courseInfo.timeSlot[day].filter((slot) => slot !== delSlot),
     }
-    setCourseInfo({ ...courseInfo, timeslots: newTimeSlot })
+    setCourseInfo({ ...courseInfo, timeSlot: newTimeSlot })
   }
 
   const renderTimeSlot = () => (
@@ -153,8 +137,8 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
       </View>
       <Text style={{ marginBottom: "3%" }}>Your Timeslots :</Text>
       <View>
-        {Object.keys(courseInfo.timeslots).map((day) => {
-          return courseInfo.timeslots[day].map((slot, idx) => (
+        {Object.keys(courseInfo.timeSlot).map((day) => {
+          return courseInfo.timeSlot[day].map((slot, idx) => (
             // <Text key={day + idx}>{`${day} | ${slot.start} : ${slot.end}`}</Text>
             <TouchableOpacity
               key={day + idx}
@@ -181,9 +165,7 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
   const removeLesson = (lessonName: string) => {
     setCourseInfo({
       ...courseInfo,
-      lessonList: courseInfo.lessonList.filter(
-        (lesson) => lesson !== lessonName
-      ),
+      lesson: courseInfo.lesson.filter((lesson) => lesson !== lessonName),
     })
   }
 
@@ -191,7 +173,7 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
     if (lessonInput !== "") {
       setCourseInfo({
         ...courseInfo,
-        lessonList: [...courseInfo.lessonList, lessonInput],
+        lesson: [...courseInfo.lesson, lessonInput],
       })
       setLessonInput("")
     }
@@ -226,19 +208,17 @@ const EditCourseInfo: FC<EditCourseInfoProp> = ({
         {/* Subject */}
         <TextInput
           label="Subject"
-          value={courseInfo.subjectName}
+          value={courseInfo.subject}
           autoComplete
           autoCorrect={false}
           style={styles.input}
-          onChangeText={(subject) =>
-            setCourseInfo({ ...courseInfo, subjectName: subject })
-          }
+          onChangeText={(subject) => setCourseInfo({ ...courseInfo, subject })}
         />
 
         {/* Lesson */}
         <Text style={{ marginBottom: "2%" }}>Lesson :</Text>
         <View style={{ flexDirection: "row" }}>
-          {courseInfo.lessonList.map((lesson, idx) => (
+          {courseInfo.lesson.map((lesson, idx) => (
             <TouchableOpacity
               key={idx}
               style={{

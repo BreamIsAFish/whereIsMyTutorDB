@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   View,
   Text,
@@ -9,11 +9,18 @@ import {
   Alert,
   Pressable,
 } from "react-native"
-import { useNavigation, CommonActions } from "@react-navigation/native"
-import { RadioButton, Divider, List } from "react-native-paper"
+import {
+  useNavigation,
+  CommonActions,
+  useFocusEffect,
+} from "@react-navigation/native"
+import { RadioButton, Divider } from "react-native-paper"
 
 import CourseCard from "../components/CourseCard"
-import { Course } from "../interfaces/courseInterface"
+import { getCourseInfo } from "../databases/MySQL"
+import { searchCourse } from "../databases/NoSQL"
+import { Course, CourseDay, LearningType } from "../interfaces/courseInterface"
+import { MinorCourseInfoDto } from "../interfaces/dto"
 
 type PriceRate =
   | "All"
@@ -23,81 +30,178 @@ type PriceRate =
   | "2000 - 3000 Bath"
   | "3000++ Bath"
 
+type MinorCourseInfoList = { [courseId: string]: MinorCourseInfoDto }
+
 const SearchCoursePage = () => {
-  // const [courseName, setCourseName] = useState()
-  // const [subjectName, setSubjectName] = useState('Mathematics')
-  // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
-  // const [courseDay, setCourseDay] = useState(['Monday', 'Wednesday'])
-  // const [capacity, setCapacity] = useState(0)
-  // const [maxCapacity, setMaxCapacity] = useState(0)
-  // const [rating, setRating] = useState(0)
-  // const [tutorName, setTutorName] = useState('Dr. Kommuay')
+  // States //
   const [courseList, setCourseList] = useState<Course[]>([
     {
       courseName: "Caluluay เรียนแล้วรวย",
       subjectName: "Mathematics",
       lessonList: ["Calculus", "Linear Algebra"],
-      courseDay: ["Monday", "Tuesday"],
+      // courseDay: ["Monday", "Tuesday"],
       capacity: 13,
       maxCapacity: 69,
       rating: 3.6,
       tutorName: "Dr. Kommuay",
-    }, // Just test example, can be delete
-    {
-      courseName: "Caluluay เรียนแล้วรวย",
-      subjectName: "Mathematics",
-      lessonList: ["Calculus", "Linear Algebra"],
-      courseDay: ["Monday", "Tuesday"],
-      capacity: 13,
-      maxCapacity: 69,
-      rating: 3.6,
-      tutorName: "Dr. Kommuay",
+      courseId: "002",
+      tutorUsername: "002",
     }, // Just test example, can be delete
   ])
+  const [minorInfoList, setMinorInfoList] = useState<MinorCourseInfoList>({
+    // "000": {
+    //   courseId: "000",
+    //   displayName: "",
+    //   numMember: 0,
+    //   rating: 0,
+    // },
+  })
 
-  // const [subjectList, setSubjectList] = useState<string[]>([
-  //   "All",
-  //   "Mathematic",
-  //   "Science",
-  //   "History",
-  //   "Sociology",
-  //   "Biology",
-  //   "Chemistry",
-  //   "Physic",
-  // ])
+  // Search States //
   const [search, setSearch] = useState<string>("")
-  const [filterVisible, setFilterVisible] = useState<boolean>(false)
-  const [priceRate, setPriceRate] = useState<PriceRate>("All")
+  const [subject, setSubject] = useState<string>("")
   const [min, setMin] = useState<number>(0)
   const [max, setMax] = useState<number>(-1)
-  const [courseDay, setCourseDay] = useState<"Mixed" | "Weekend" | "Weekday">(
-    "Mixed"
-  )
-  const [learningType, setLearningType] = useState<
-    "Mixed" | "Online" | "Offline"
-  >("Mixed")
-  const [subject, setSubject] = useState<string>("")
+  const [courseDay, setCourseDay] = useState<CourseDay>("Mixed")
+  const [learningType, setLearningType] = useState<LearningType>("Mixed")
   const [sortType, setSortType] = useState<"Price" | "Date">("Price")
   const [isAscending, setIsAscending] = useState<boolean>(true)
+  const [priceRate, setPriceRate] = useState<PriceRate>("All")
+  const [filterVisible, setFilterVisible] = useState<boolean>(false)
+
+  const [refresh, setRefresh] = useState<boolean>(false)
 
   // useNavigation //
   const navigation = useNavigation()
 
-  // other functions //
-  const redirectCourseInfo = () => {
+  // useFocusEffect & useEffect //
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     ;(async () => {
+  //       console.log("Fetching Courses")
+  //       await fetchCourseList()
+  //     })()
+  //   }, [])
+  // )
+  // useEffect(() => {
+  //   console.log("Fetching Courses")
+  //   fetchCourseList()
+  // }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      console.log("Fetching Courses")
+      await fetchCourseList()
+    })()
+  }, [
+    search,
+    subject,
+    min,
+    max,
+    courseDay,
+    learningType,
+    sortType,
+    isAscending,
+  ])
+
+  useEffect(() => {
+    ;(async () => {
+      if (refresh) {
+        // console.log(courseList)
+        setRefresh(false)
+        await fetchCourseMinorInfo()
+      }
+    })()
+  }, [courseList])
+
+  useEffect(() => {
+    setCourseList(
+      courseList.map((course) => ({
+        ...course,
+        tutorName: minorInfoList[course.courseId]
+          ? minorInfoList[course.courseId].displayName
+          : "",
+        capacity: minorInfoList[course.courseId]
+          ? minorInfoList[course.courseId].numMember
+          : -1,
+        rating: minorInfoList[course.courseId]
+          ? minorInfoList[course.courseId].rating
+          : -1,
+      }))
+    )
+  }, [minorInfoList])
+
+  // Fetch data //
+  const fetchCourseList = async () => {
+    // console.log({
+    //   search,
+    //   subject,
+    //   min,
+    //   max,
+    //   courseDay,
+    //   learningType,
+    //   sortType,
+    //   isAscending,
+    // })
+    const courses = await searchCourse({
+      search,
+      subject,
+      min,
+      max,
+      courseDay,
+      learningType,
+      sortType,
+      isAscending,
+    })
+    // console.log("got", courses)
+    if (courses) {
+      setRefresh(true)
+      setCourseList(
+        courses.map((course) => ({
+          courseName: course.courseName,
+          subjectName: course.subject,
+          lessonList: course.lesson,
+          // courseDay: Object.keys(course.timeSlot),
+          maxCapacity: course.capacity,
+          capacity: 0,
+          rating: 0,
+          tutorName: "",
+          courseId: course.courseId,
+          tutorUsername: course.tutorUsername,
+        }))
+      )
+    }
+  }
+
+  const fetchCourseMinorInfo = async () => {
+    let list: MinorCourseInfoList = {}
+    if (courseList) {
+      const minorInfo = await getCourseInfo(
+        courseList.map((course) => ({
+          tutorUsername: course.tutorUsername,
+          courseId: course.courseId,
+        }))
+      )
+      for (const info of minorInfo) {
+        list[info.courseId] = info
+      }
+      setMinorInfoList(list)
+    }
+  }
+
+  // Other functions //
+  const redirectCourseInfo = (courseId: string) => {
     console.log("navigating to edit course page...")
     navigation.dispatch(
       CommonActions.navigate({
         name: "ViewCourseInfo",
+        params: { courseId: courseId },
       })
     )
   }
 
   return (
     <View style={styles.page}>
-      {/* <Text style={{ textAlign: "center" }}>
-        {"======== Search bar ======="}
-      </Text> */}
       <View style={{ flexDirection: "column", marginHorizontal: 20 }}>
         <View style={{ flexDirection: "row", height: 40 }}>
           <TextInput
@@ -149,7 +253,10 @@ const SearchCoursePage = () => {
       <ScrollView style={styles.scrollSection}>
         {courseList.map((course, idx) => (
           <View key={idx} style={styles.card}>
-            <CourseCard course={course} onClick={redirectCourseInfo} />
+            <CourseCard
+              course={course}
+              onClick={() => redirectCourseInfo(course.courseId)}
+            />
           </View>
         ))}
       </ScrollView>
@@ -204,10 +311,8 @@ const SearchCoursePage = () => {
                         priceRate === "0 - 500 Bath" ? "checked" : "unchecked"
                       }
                       onPress={() => {
-                        setPriceRate("0 - 500 Bath"),
-                          setMin(0),
-                          setMax(500),
-                          console.log("set min:", { min }, ", max:", { max })
+                        setPriceRate("0 - 500 Bath"), setMin(0), setMax(500)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>0 - 500 Bath</Text>
@@ -229,8 +334,8 @@ const SearchCoursePage = () => {
                       onPress={() => {
                         setPriceRate("500 - 1000 Bath"),
                           setMin(500),
-                          setMax(1000),
-                          console.log("set min:", { min }, ", max:", { max })
+                          setMax(1000)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>500 - 1000 Bath</Text>
@@ -254,8 +359,8 @@ const SearchCoursePage = () => {
                       onPress={() => {
                         setPriceRate("1000 - 2000 Bath"),
                           setMin(1000),
-                          setMax(2000),
-                          console.log("set min:", { min }, ", max:", { max })
+                          setMax(2000)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>1000 - 2000 Bath</Text>
@@ -277,8 +382,8 @@ const SearchCoursePage = () => {
                       onPress={() => {
                         setPriceRate("2000 - 3000 Bath"),
                           setMin(2000),
-                          setMax(3000),
-                          console.log("set min:", { min }, ", max:", { max })
+                          setMax(3000)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>2000 - 3000 Bath</Text>
@@ -298,10 +403,8 @@ const SearchCoursePage = () => {
                         priceRate === "3000++ Bath" ? "checked" : "unchecked"
                       }
                       onPress={() => {
-                        setPriceRate("3000++ Bath"),
-                          setMin(3000),
-                          setMax(1000000),
-                          console.log("set min:", { min }, ", max:", { max })
+                        setPriceRate("3000++ Bath"), setMin(3000), setMax(-1)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>3000++ Bath</Text>
@@ -317,10 +420,8 @@ const SearchCoursePage = () => {
                       value="value"
                       status={priceRate === "All" ? "checked" : "unchecked"}
                       onPress={() => {
-                        setPriceRate("All"),
-                          setMin(0),
-                          setMax(-1),
-                          console.log("set min:", { min }, ", max:", { max })
+                        setPriceRate("All"), setMin(0), setMax(-1)
+                        // console.log("set min:", { min }, ", max:", { max })
                       }}
                     />
                     <Text>All</Text>
@@ -447,8 +548,8 @@ const SearchCoursePage = () => {
                       setSubject(""),
                       setMin(0),
                       setMax(-1),
-                      setLearningType("Mixed"),
-                      console.log("set min:", { min }, ", max:", { max })
+                      setLearningType("Mixed")
+                    // console.log("set min:", { min }, ", max:", { max })
                   }}
                 >
                   <Text style={styles.textStyle}>Clear</Text>

@@ -9,15 +9,6 @@ interface CourseCardProp {
 }
 
 const CourseCard: FC<CourseCardProp> = ({ course, onClick }) => {
-  // const [courseName, setCourseName] = useState('Calculuay เรียนแล้วรวย')
-  // const [subjectName, setSubjectName] = useState('Mathematics')
-  // const [lessonList, setLessonList] = useState(['Calculus', 'Linear Algebra'])
-  // const [courseDay, setCourseDay] = useState(['Monday', 'Wednesday'])
-  // const [capacity, setCapacity] = useState(0)
-  // const [maxCapacity, setMaxCapacity] = useState(0)
-  // const [rating, setRating] = useState(0)
-  // const [tutorName, setTutorName] = useState('Dr. Kommuay')
-
   const defaultClick = () => {
     console.log("Kuy Pond")
   }
@@ -34,8 +25,10 @@ const CourseCard: FC<CourseCardProp> = ({ course, onClick }) => {
             marginRight: "3%",
           }}
         />
-        <View style={{ marginVertical: "2%" }}>
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+        <View style={{ marginVertical: "3%" }}>
+          <Text
+            style={{ fontWeight: "bold", fontSize: 20, marginBottom: "5%" }}
+          >
             {course.courseName}
           </Text>
           <Text>{course.subjectName}</Text>
@@ -44,18 +37,26 @@ const CourseCard: FC<CourseCardProp> = ({ course, onClick }) => {
               <Text key={idx}>{lesson}</Text>
             ))}
           </View>
-          <View style={{ flexDirection: "row" }}>
+          {/* <View style={{ flexDirection: "row" }}>
             {course.courseDay.map((day, idx) => (
               <Text key={idx}>{day}</Text>
             ))}
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text>{course.rating ? "Rating: " + course.rating : ""}</Text>
+          </View> */}
+          <View style={{ flexDirection: "row", marginBottom: "4%" }}>
+            <Text>{course.rating ? "Rating: " + course.rating + " " : ""}</Text>
             <Text>
               {course.capacity
-                ? `Capacity: ${course.capacity}/${course.maxCapacity}`
+                ? `Capacity: ${course.capacity}/${course.maxCapacity} `
                 : ""}
             </Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ marginRight: "3%" }}>
+              <Image
+                source={require("../../assets/icons/Person.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            </View>
             <Text>{course.tutorName}</Text>
           </View>
         </View>

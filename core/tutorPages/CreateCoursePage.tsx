@@ -1,43 +1,73 @@
-import React, { FC, useState } from "react"
+import React, { FC, useState, useEffect } from "react"
 import { View, StyleSheet } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import { Button } from "react-native-paper"
+import { useNavigation } from "@react-navigation/native"
 
 import EditCourseInfo from "../components/EditCourseInfo"
-import { CourseInformations } from "../interfaces/courseInterface"
+import { addCourse } from "../databases/NoSQL"
+// import { CourseInformations } from "../interfaces/courseInterface"
+import { AddCourseDto, UpdateCourseDto } from "../interfaces/dto"
+import { loadUsername } from "../util/AsyncStorage"
 
 const CreateCoursePage: FC = () => {
   // States //
-  const [courseInfo, setCourseInfo] = useState<CourseInformations>({
-    courseImage: undefined,
+  const [username, setUsername] = useState<string>("")
+  const [courseInfo, setCourseInfo] = useState<UpdateCourseDto>({
     courseName: "",
-    subjectName: "",
-    lessonList: [],
-    timeslots: {},
+    subject: "",
+    lesson: [],
+    timeSlot: {},
     price: 0,
     capacity: 0,
     learningType: "Mixed",
     description: "",
     courseHour: 0,
+    courseId: "",
   })
+
+  // useNavigation //
+  const navigation = useNavigation()
+
+  // useEffect //
+  useEffect(() => {
+    getTutorUsername()
+  }, [])
+
+  // Fetch data //
+  const getTutorUsername = async () => {
+    const usr = await loadUsername()
+    setUsername(usr[1])
+  }
 
   // Other functions //
   const createCourse = () => {
     console.log("Sending course req to backend...")
+    addCourse({
+      ...courseInfo,
+      createDate: new Date(),
+      tutorUsername: username,
+    })
+    navigation.goBack()
   }
 
   return (
     <View style={styles.page}>
-      <EditCourseInfo courseInfo={courseInfo} setCourseInfo={setCourseInfo} />
-      <Button mode="contained" color="dodgerblue" onPress={createCourse}>
-        Create Course
-      </Button>
+      <ScrollView>
+        <EditCourseInfo courseInfo={courseInfo} setCourseInfo={setCourseInfo} />
+        <View style={{ paddingHorizontal: "5%" }}>
+          <Button mode="contained" color="dodgerblue" onPress={createCourse}>
+            Create Course
+          </Button>
+        </View>
+      </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: "10%",
+    paddingVertical: "10%",
     height: "100%",
   },
 })

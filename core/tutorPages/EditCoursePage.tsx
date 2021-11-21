@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   View,
   Text,
@@ -6,82 +6,101 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { Button } from "react-native-paper"
 
 import MemberCard from "../components/MemberCard"
 import EnrollmentCard from "../components/ErollmentCard"
 import EditCourseInfo from "../components/EditCourseInfo"
+import { EnrollmentDto, MemberDto, UpdateCourseDto } from "../interfaces/dto"
+import { deleteCourse, getCourseById, updateCourse } from "../databases/NoSQL"
+import { loadUsername } from "../util/AsyncStorage"
 import {
-  Member,
-  Enrollment,
-  CourseInformations,
-} from "../interfaces/courseInterface"
+  deleteCourseSQL,
+  getCourseEnrollment,
+  getMember,
+} from "../databases/MySQL"
+
+type PageState = "Enrollment" | "Member" | "Information"
 
 const EditCoursePage = () => {
   // states //
-  const [courseInfo, setCourseInfo] = useState<CourseInformations>({
-    courseImage: undefined,
+  // const [username, setUsername] = useState<string>()
+  const [courseInfo, setCourseInfo] = useState<UpdateCourseDto>({
     courseName: "",
-    subjectName: "",
-    lessonList: [],
-    timeslots: {},
+    subject: "",
+    lesson: [],
+    timeSlot: {},
     price: 0,
     capacity: 0,
     learningType: "Mixed",
     description: "",
     courseHour: 0,
+    courseId: "",
   })
-  const [memberList, setMemberList] = useState<Member[]>([
+  const [memberList, setMemberList] = useState<MemberDto[]>([
     {
-      memberName: "Dr. Kommuay",
+      firstName: "Dr. Kommuay",
+      lastName: "HuaKee",
     }, // Just test example, can be delete
     {
-      memberName: "Dr. Veeruay0",
-    }, // Just test example, can be delete
-    {
-      memberName: "Dr. Veeruay1",
-    }, // Just test example, can be delete
-    {
-      memberName: "Dr. Veeruay2",
-    }, // Just test example, can be delete
-    {
-      memberName: "Dr. Veeruay3",
+      firstName: "Dr. Kommuay",
+      lastName: "HuaKee",
     }, // Just test example, can be delete
   ])
-  const [enrollmentList, setEnrollmentList] = useState<Enrollment[]>([
+  const [enrollmentList, setEnrollmentList] = useState<EnrollmentDto[]>([
     {
-      memberName: "Dr. Kommuay",
-      time: "03/11/2021   06:37",
-    }, // Just test example, can be delete
-    {
-      memberName: "Dr. Veeruay0",
-      time: "03/11/2021   06:38",
-    }, // Just test example, can be delete
-    {
-      memberName: "Dr. Veeruay1",
-      time: "03/11/2021   06:39",
-    }, // Just test example, can be delete
-    {
-      memberName: "Dr. Veeruay2",
-      time: "03/11/2021   06:40",
-    }, // Just test example, can be delete
-    {
-      memberName: "Dr. Veeruay3",
-      time: "03/11/2021   06:41",
+      enrollmentId: "",
+      studentUsername: "",
+      firstName: "",
+      lastName: "",
     }, // Just test example, can be delete
   ])
+  const [pageState, setPageState] = useState<PageState>("Information")
 
-  const [pageState, setPageState] = useState<
-    "Enrollment" | "Member" | "Information"
-  >("Information")
-
+  // useNavigation & useRoute //
   const navigation = useNavigation()
+
+  // useRoute //
+  const route: RouteProp<{ params: { courseId: string } }, "params"> =
+    useRoute()
+
+  // useEffect //
+  useEffect(() => {
+    ;(async () => {
+      // await getTutorUsername()
+      await getCourseInfo()
+      console.log(route.params.courseId)
+    })()
+  }, [])
+
+  // Fetch data //
+  // const getTutorUsername = async () => {
+  //   const usr = await loadUsername()
+  //   setUsername(usr[1])
+  // }
+
+  const getCourseInfo = async () => {
+    const info = await getCourseById(route.params.courseId)
+    if (info) setCourseInfo(info)
+  }
+
+  const getCourseMember = async () => {
+    const memberList = await getMember({ courseId: route.params.courseId })
+    setMemberList(memberList)
+  }
+
+  const getEnrollment = async () => {
+    const enrollments = await getCourseEnrollment({
+      courseId: route.params.courseId,
+    })
+    setEnrollmentList(enrollments)
+  }
 
   // Other functions //
   const sendData = () => {
     console.log("Saving data...")
-
+    updateCourse(route.params.courseId, courseInfo)
     navigation.goBack()
   }
 
@@ -90,17 +109,22 @@ const EditCoursePage = () => {
     navigation.goBack()
   }
 
-  const deleteCourse = () => {
-    console.log("Deleting the course...")
+  const handleChangePage = async (nextPage: PageState) => {
+    setPageState(nextPage)
+    if (nextPage === "Information") await getCourseInfo()
+    else if (nextPage === "Member") await getCourseMember()
+    else await getEnrollment()
+  }
 
+  const handleDelete = () => {
+    console.log("Deleting the course...")
+    deleteCourse(route.params.courseId)
+    deleteCourseSQL({ courseId: route.params.courseId })
     navigation.goBack()
   }
 
   return (
     <View style={styles.page}>
-      {/* <Text style={{ textAlign: "center" }}>
-        {"======== Info / Member / Enrollment ======="}
-      </Text> */}
       <View style={styles.ChooseSection}>
         <TouchableOpacity
           style={{
@@ -113,7 +137,7 @@ const EditCoursePage = () => {
             paddingVertical: "2%",
             // marginRight: "20%",
           }}
-          onPress={() => setPageState("Information")}
+          onPress={() => handleChangePage("Information")}
         >
           <Text>Information</Text>
         </TouchableOpacity>
@@ -127,7 +151,7 @@ const EditCoursePage = () => {
             paddingHorizontal: "7%",
             paddingVertical: "2%",
           }}
-          onPress={() => setPageState("Member")}
+          onPress={() => handleChangePage("Member")}
         >
           <Text>Member</Text>
         </TouchableOpacity>
@@ -141,7 +165,7 @@ const EditCoursePage = () => {
             paddingHorizontal: "7%",
             paddingVertical: "2%",
           }}
-          onPress={() => setPageState("Enrollment")}
+          onPress={() => handleChangePage("Enrollment")}
         >
           <Text>Enrollment</Text>
         </TouchableOpacity>
@@ -152,9 +176,6 @@ const EditCoursePage = () => {
           <EditCourseInfo
             courseInfo={courseInfo}
             setCourseInfo={setCourseInfo}
-            // onSave={sendData}
-            // goBack={goBack}
-            // deleteCourse={deleleCourse}
           />
           <View style={{ paddingHorizontal: "5%" }}>
             <Button
@@ -173,7 +194,7 @@ const EditCoursePage = () => {
             >
               Cancel
             </Button>
-            <Button mode="contained" color="tomato" onPress={deleteCourse}>
+            <Button mode="contained" color="tomato" onPress={handleDelete}>
               Delete Course
             </Button>
           </View>
@@ -194,7 +215,7 @@ const EditCoursePage = () => {
         <ScrollView style={styles.scrollSection}>
           {enrollmentList.map((enrollment, idx) => (
             <View key={idx} style={styles.card}>
-              <EnrollmentCard enrollment={enrollment} />
+              <EnrollmentCard enrollment={enrollment} update={getEnrollment} />
             </View>
           ))}
         </ScrollView>

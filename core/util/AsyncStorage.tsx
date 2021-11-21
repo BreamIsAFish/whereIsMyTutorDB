@@ -7,6 +7,7 @@ export const loadUsername = async () => {
   if (username) {
     const studentUsername = username.split(",")[0]
     const tutorUsername = username.split(",")[1]
+    // console.log([studentUsername, tutorUsername])
     return [studentUsername, tutorUsername]
   }
   return ["", ""]
