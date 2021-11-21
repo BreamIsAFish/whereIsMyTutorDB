@@ -35,8 +35,8 @@ export interface CourseInfoDto {
   capacity: number
   courseHour: number
   description: string
-  // imageURL: string
-  // startDate: Date
+  imageURL: string
+  startDate: Date
 }
 
 export interface SearchDto {

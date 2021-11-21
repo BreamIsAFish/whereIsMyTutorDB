@@ -5,10 +5,10 @@ import {
   ReviewDto,
 } from "../interfaces/dto"
 
-const link = "http://f150-2001-fb1-9c-a6a2-dc57-e723-4960-da1e.ngrok.io"
+const link = "https://bff3-2001-fb1-9f-abca-bcf3-5df2-682d-fe72.ngrok.io"
 
-export const getTutor = async () => {
-  var x: { tutorUsername: string }[] | null = null
+export const getTutor = async (): Promise<{ tutorUsername: string }[]> => {
+  var x: { tutorUsername: string }[] = []
   await fetch(`${link}/tutor`)
     .then((response) => response.json())
     .then((data) => (x = data))

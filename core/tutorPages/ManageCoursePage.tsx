@@ -55,14 +55,22 @@ const ManageCoursePage: FC = () => {
     }, [])
   )
 
+  useEffect(() => {
+    ;(async () => {
+      await getAllCourses()
+    })()
+  }, [username])
+
   // Fetch data //
   const getTutorUsername = async () => {
     const usr = await loadUsername()
     setUsername(usr[1])
+    console.log("finish load username:", usr[1])
   }
 
   const getAllCourses = async () => {
     const courses = await getCourseByTutor(username)
+    console.log("courses loaded")
     setCourseList(
       courses.map((course) => ({
         courseName: course.courseName,
@@ -70,9 +78,9 @@ const ManageCoursePage: FC = () => {
         lessonList: course.lesson,
         // courseDay: course.,
         capacity: 13,
-        maxCapacity: 69,
-        courseId: "001",
-        tutorUsername: "001",
+        maxCapacity: course.capacity,
+        courseId: course.courseId,
+        tutorUsername: course.tutorUsername,
         rating: 0,
         tutorName: "",
       }))

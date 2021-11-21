@@ -66,6 +66,7 @@ const EditCoursePage = () => {
     ;(async () => {
       await getTutorUsername()
       await getCourseInfo()
+      console.log(route.params.courseId)
     })()
   }, [])
 
@@ -77,7 +78,7 @@ const EditCoursePage = () => {
 
   const getCourseInfo = async () => {
     const info = await getCourseById(route.params.courseId)
-    setCourseInfo(info)
+    if (info) setCourseInfo(info)
   }
 
   const getCourseMember = async () => {

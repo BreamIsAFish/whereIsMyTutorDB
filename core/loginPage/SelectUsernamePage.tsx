@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { View, StyleSheet } from "react-native"
-// import { useAsyncStorage } from "@react-native-async-storage/async-storage"
+import { useFocusEffect } from "@react-navigation/native"
 import { Provider } from "react-native-paper"
 import DropDown from "react-native-paper-dropdown"
 
@@ -26,17 +26,30 @@ const SelectUsernamePage = () => {
   // const { getItem, setItem } = useAsyncStorage("@username")
 
   // useEffects //
-  useEffect(() => {
-    ;(async () => {
-      console.log("Loding username...")
-      await fetchData()
-      // const [studentUsername, tutorUsername] = await loadUsername()
-    })()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      ;(async () => {
+        console.log("Loding all username...")
+        await fetchData()
+      })()
+    }, [])
+  )
 
   useEffect(() => {
     ;(async () => {
-      if (studentUsernameList[0] && tutorUsernameList[0]) {
+      const [sUsername, tUsername] = await loadUsername()
+      if (
+        sUsername.length !== 0 &&
+        tUsername.length !== 0
+        //  &&
+        // studentUsernameList.includes({ studentUsername: sUsername }) &&
+        // tutorUsernameList.includes({ tutorUsername: tUsername })
+      ) {
+        // console.log("I'm in")
+        setActiveStudentUsername(sUsername)
+        setActiveTutorUsername(tUsername)
+      } else if (studentUsernameList[0] && tutorUsernameList[0]) {
+        // console.log("I'm out")
         setActiveStudentUsername(studentUsernameList[0].studentUsername)
         setActiveTutorUsername(tutorUsernameList[0].tutorUsername)
       }
@@ -45,8 +58,11 @@ const SelectUsernamePage = () => {
 
   useEffect(() => {
     ;(async () => {
-      console.log("Saving username...")
-      await saveUsername(activeStudentUsername, activeTutorUsername)
+      if (activeStudentUsername !== "" && activeTutorUsername !== "")
+        await saveUsername(activeStudentUsername, activeTutorUsername)
+      console.log(
+        `Saving username: ${activeStudentUsername}, ${activeTutorUsername}`
+      )
     })()
   }, [activeStudentUsername, activeTutorUsername])
 
