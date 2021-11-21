@@ -615,13 +615,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: "mediumpurple",
   },
   buttonClose: {
     backgroundColor: "#2196F3",
   },
   buttonApplyFilter: {
-    backgroundColor: "purple",
+    backgroundColor: "mediumpurple",
     width: 100,
   },
   buttonClearFilter: {

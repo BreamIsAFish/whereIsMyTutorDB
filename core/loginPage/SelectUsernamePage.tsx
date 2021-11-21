@@ -85,7 +85,7 @@ const SelectUsernamePage = () => {
     <View style={styles.page}>
       <View style={{ width: "90%", flexDirection: "row", marginTop: "10%" }}>
         <Provider>
-          <View style={{ marginBottom: "10%" }}>
+          <View style={{ marginBottom: "5%" }}>
             <DropDown
               label={"Student Username"}
               mode={"outlined"}
@@ -102,9 +102,10 @@ const SelectUsernamePage = () => {
                 value: studentUsername,
               }))}
               placeholder={"Select your Student Username"}
-              // dropDownStyle={{ marginVertical: "10%" }}
+              dropDownStyle={{ padding: 0, margin: 0 }}
             />
           </View>
+
           <View>
             <DropDown
               label={"Tutor Username"}
