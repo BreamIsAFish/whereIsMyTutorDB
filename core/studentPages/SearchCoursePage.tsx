@@ -75,14 +75,14 @@ const SearchCoursePage = () => {
   const navigation = useNavigation()
 
   // useFocusEffect & useEffect //
-  useFocusEffect(
-    React.useCallback(() => {
-      ;(async () => {
-        console.log("Fetching Courses")
-        await fetchCourseList()
-      })()
-    }, [])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     ;(async () => {
+  //       console.log("Fetching Courses")
+  //       await fetchCourseList()
+  //     })()
+  //   }, [])
+  // )
   // useEffect(() => {
   //   console.log("Fetching Courses")
   //   fetchCourseList()
